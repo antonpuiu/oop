@@ -1,4 +1,5 @@
 package lab4;
+
 import utils.*;
 
 public class Main extends Runner
@@ -6,6 +7,14 @@ public class Main extends Runner
     @Override
     public MainTask[] getTasks() {
         MainTask[] tasks = {
+            new lab4.task1.Main(),
+            new lab4.task2.Main(),
+            new lab4.task3.Main(),
+            new lab4.task4.Main(),
+            new lab4.task5.Main(),
+            new lab4.task6.Main(),
+            new lab4.task7.Main(),
+            new lab4.task8.Main()
         };
 
         return tasks;
@@ -18,6 +27,6 @@ public class Main extends Runner
 
     @Override
     public int getId() {
-        return 0;
+        return 4;
     }
 }

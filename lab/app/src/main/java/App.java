@@ -1,5 +1,4 @@
-import utils.Runner;
-import utils.MainTask;
+import utils.*;
 
 public class App extends Runner {
     public static void main(String[] args) {
@@ -11,8 +10,8 @@ public class App extends Runner {
         MainTask[] tasks = {
             new lab1.Main(),
             new lab2.Main(),
-            // new lab3.Main(),
-            // new lab4.Main(),
+            new lab3.Main(),
+            new lab4.Main(),
             // new lab5.Main(),
             // new lab6.Main(),
             // new lab7.Main(),
