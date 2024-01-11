@@ -7,6 +7,8 @@ public class Main extends Runner
     @Override
     public MainTask[] getTasks() {
         MainTask[] tasks = {
+            new lab7.task1.Main(),
+            new lab7.task2.Main()
         };
 
         return tasks;
