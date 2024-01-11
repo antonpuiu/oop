@@ -13,7 +13,7 @@ public class App extends Runner {
             new lab3.Main(),
             new lab4.Main(),
             new lab5.Main(),
-            // new lab6.Main(),
+            new lab6.Main(),
             // new lab7.Main(),
             // new lab8.Main(),
             // new lab9.Main(),
