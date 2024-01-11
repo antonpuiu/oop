@@ -1,4 +1,5 @@
 package lab10;
+
 import utils.*;
 
 public class Main extends Runner
@@ -18,6 +19,6 @@ public class Main extends Runner
 
     @Override
     public int getId() {
-        return 0;
+        return 10;
     }
 }
