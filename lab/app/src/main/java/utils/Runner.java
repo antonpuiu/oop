@@ -7,7 +7,7 @@ public abstract class Runner implements MainTask {
 
         for (int i = 0; i < tasks.length; i++) {
             if (tasks[i].getId() == 0)
-                System.out.printf("Executing %s...\n", tasks[i].getUnit(), tasks[i].getId());
+                System.out.printf("Executing %s...\n", tasks[i].getUnit());
             else
                 System.out.printf("Executing %s %d...\n", tasks[i].getUnit(), tasks[i].getId());
 

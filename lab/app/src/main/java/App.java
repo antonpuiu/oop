@@ -1,8 +1,19 @@
-import utils.*;
+import utils.AppUnitTask;
+import utils.MainTask;
+import utils.AppRunner;
 
 public class App extends AppUnitTask {
     public static void main(String[] args) {
-        new App().main();
+        AppRunner appRunner = new AppRunner() {
+                @Override
+                public MainTask[] getTasks() {
+                    MainTask[] app = { new App() };
+
+                    return app;
+                }
+            };
+
+        appRunner.main();
     }
 
     @Override
@@ -15,7 +26,7 @@ public class App extends AppUnitTask {
             new lab5.Main(),
             new lab6.Main(),
             new lab7.Main(),
-            // new lab8.Main(),
+            new lab8.Main(),
             // new lab9.Main(),
             // new lab10.Main(),
             // new lab11.Main(),
