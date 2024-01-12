@@ -133,7 +133,7 @@ class Circle extends Form {
     }
 }
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Form[] forms = {

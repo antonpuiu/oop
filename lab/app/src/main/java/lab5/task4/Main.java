@@ -1,8 +1,8 @@
 package lab5.task4;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Song song1 = new Song("Bad", 101, "Michael Jackson");

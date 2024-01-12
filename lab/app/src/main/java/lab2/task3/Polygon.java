@@ -1,8 +1,6 @@
 package lab2.task3;
 
-import utils.MainTask;
-
-public class Polygon implements MainTask {
+public class Polygon {
     private Point[] points;
 
     public Polygon() {
@@ -26,11 +24,6 @@ public class Polygon implements MainTask {
     }
 
     @Override
-    public int getId() {
-        return 2;
-    }
-
-    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
@@ -40,19 +33,5 @@ public class Polygon implements MainTask {
             builder.append(" " + points[i].toString());
 
         return builder.toString();
-    }
-
-    @Override
-    public void main() {
-        float[] numbers = {
-            0, 1,
-            3, 4,
-            5, 6,
-            1, 2
-        };
-
-        Polygon poly = new Polygon(numbers);
-
-        System.out.println("Polygon: " + poly.toString());
     }
 }

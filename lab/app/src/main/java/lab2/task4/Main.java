@@ -1,8 +1,8 @@
 package lab2.task4;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Book b1 = new Book("Morometii", "Marin Preda", 1955);

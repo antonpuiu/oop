@@ -1,8 +1,8 @@
 package lab1.task1;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class VeterinaryTest implements MainTask {
+public class Main extends TaskUnitTask {
         @Override
         public void main() {
                 VeterinaryReport vr = new VeterinaryReport();

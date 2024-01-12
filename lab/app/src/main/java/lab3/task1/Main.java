@@ -1,30 +1,8 @@
 package lab3.task1;
 
-import utils.*;
+import utils.TaskUnitTask;
 
-class Form {
-  private String color;
-
-  Form() {
-    this("white");
-  }
-
-  Form(String color) {
-    this.color = new String(color);
-  }
-
-  float getArea()
-  {
-    return 0;
-  }
-
-  @Override
-  public String toString() {
-    return "This form has the color " + color;
-  }
-}
-
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
   @Override
   public void main() {
     Form form1 = new Form();

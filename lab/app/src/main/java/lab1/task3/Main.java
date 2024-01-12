@@ -2,9 +2,9 @@ package lab1.task3;
 
 import lab1.task2.Student;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class EqualsCheck implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Student student = new Student("A", 5.4);

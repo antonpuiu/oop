@@ -1,26 +1,18 @@
 package lab1;
 
-import lab1.task1.VeterinaryTest;
-import lab1.task3.EqualsCheck;
-
 import utils.*;
 
-public class Main extends Runner {
+public class Main extends LabUnitTask {
     @Override
     public MainTask[] getTasks() {
         MainTask[] tasks = {
-            new VeterinaryTest(),
-            new lab1.task2.JobMarket(),
-            new EqualsCheck(),
-            new lab1.task4.JobMarket()
+            new lab1.task1.Main(),
+            new lab1.task2.Main(),
+            new lab1.task3.Main(),
+            new lab1.task4.Main()
         };
 
         return tasks;
-    }
-
-    @Override
-    public String getUnit() {
-        return "task";
     }
 
     @Override

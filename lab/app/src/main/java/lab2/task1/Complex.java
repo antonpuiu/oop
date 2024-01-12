@@ -1,8 +1,6 @@
 package lab2.task1;
 
-import utils.MainTask;
-
-public class Complex implements MainTask {
+public class Complex {
     private int real;
     private int imaginary;
 
@@ -48,25 +46,5 @@ public class Complex implements MainTask {
             System.out.printf("%d + i*%d\n", real, imaginary);
         else
             System.out.printf("%d - i*%d\n", real, -imaginary);
-    }
-
-    @Override
-    public void main() {
-        // TODO Auto-generated method stub
-        Complex[] numbers = {
-            new Complex(0, 0),
-            new Complex(1, 1),
-            new Complex(1, -1)
-        };
-
-        for (Complex number : numbers)
-            number.showNumber();
-
-        numbers[0].addWithComplex(numbers[1]);
-    }
-
-    @Override
-    public int getId() {
-        return 1;
     }
 }

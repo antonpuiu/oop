@@ -1,8 +1,8 @@
 package lab1.task4;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class JobMarket implements MainTask {
+public class Main extends TaskUnitTask {
     public void main() {
         Student[] students = {
             new Student("Gigel", 8.5),

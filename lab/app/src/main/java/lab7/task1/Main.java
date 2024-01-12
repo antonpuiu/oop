@@ -6,12 +6,12 @@ import lab7.task1.document.text.PlainTextSegment;
 import lab7.task1.document.text.TextSegment;
 import lab7.task1.document.text.UrlSegment;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     public static List<TextSegment> getTextSegments() {
         List<TextSegment> textSegments = new ArrayList<>();
 

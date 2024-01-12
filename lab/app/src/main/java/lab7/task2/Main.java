@@ -1,12 +1,12 @@
 package lab7.task2;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Path startingDir = Paths.get("src/main/java");

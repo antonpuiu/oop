@@ -1,8 +1,8 @@
 package lab1.task2;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class JobMarket implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Student[] students = {

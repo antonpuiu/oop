@@ -2,9 +2,9 @@ package lab5.task2;
 
 import lab5.task1.Task;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         System.out.println("----> Queue");

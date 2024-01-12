@@ -2,14 +2,14 @@ package lab6.task4;
 
 import lab6.task1.Car;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
 import java.util.List;
 import java.util.ArrayList;
 
 import java.util.stream.Collectors;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         List<Car> cars = new ArrayList<>() {{

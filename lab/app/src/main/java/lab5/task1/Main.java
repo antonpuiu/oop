@@ -2,9 +2,9 @@ package lab5.task1;
 
 import java.util.Random;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     public static Random generator = new Random(12345);
     public static int counter = 0;
     public static Task[] tasks = {

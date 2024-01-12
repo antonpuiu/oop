@@ -1,8 +1,8 @@
 package lab5.task3;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Operation op = new Operation(13.5f);

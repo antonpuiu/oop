@@ -1,6 +1,6 @@
 import utils.*;
 
-public class App extends Runner {
+public class App extends AppUnitTask {
     public static void main(String[] args) {
         new App().main();
     }
@@ -23,15 +23,5 @@ public class App extends Runner {
         };
 
         return tasks;
-    }
-
-    @Override
-    public String getUnit() {
-        return "lab";
-    }
-
-    @Override
-    public int getId() {
-        return 0;
     }
 }

@@ -2,19 +2,13 @@ package lab12;
 
 import utils.*;
 
-public class Main extends Runner
-{
+public class Main extends LabUnitTask {
     @Override
     public MainTask[] getTasks() {
         MainTask[] tasks = {
         };
 
         return tasks;
-    }
-
-    @Override
-    public String getUnit() {
-        return "task";
     }
 
     @Override

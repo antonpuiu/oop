@@ -3,9 +3,9 @@ package lab6.task3;
 import lab6.task1.Car;
 import lab6.task1.Offer;
 
-import utils.MainTask;
+import utils.TaskUnitTask;
 
-public class Main implements MainTask {
+public class Main extends TaskUnitTask {
     @Override
     public void main() {
         Car mercedes = new Car(20000, Car.CarType.MERCEDES, 2020);
