@@ -1,0 +1,135 @@
+package lab9.task2;
+
+public class House {
+    private String location; // mandatory
+    private int numFloors; // mandatory
+    private int numRooms; // mandatory
+    private boolean pool; // optional
+    private boolean appliances; // optional
+    private boolean solarPanels; // optional
+    private String securityCompany; // optional
+
+    // TODO: complete the private constructor
+    private House(HouseBuilder builder) {
+        location = builder.location;
+        numFloors = builder.numFloors;
+        numRooms = builder.numRooms;
+        pool = builder.pool;
+        appliances = builder.appliances;
+        solarPanels = builder.solarPanels;
+        securityCompany = builder.securityCompany;
+    }
+
+    // TODO: generate getters
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getNumFloors() {
+        return numFloors;
+    }
+
+    public void setNumFloors(int numFloors) {
+        this.numFloors = numFloors;
+    }
+
+    public int getNumRooms() {
+        return numRooms;
+    }
+
+    public void setNumRooms(int numRooms) {
+        this.numRooms = numRooms;
+    }
+
+    public boolean isPool() {
+        return pool;
+    }
+
+    public void setPool(boolean pool) {
+        this.pool = pool;
+    }
+
+    public boolean isAppliances() {
+        return appliances;
+    }
+
+    public void setAppliances(boolean appliances) {
+        this.appliances = appliances;
+    }
+
+    public boolean isSolarPanels() {
+        return solarPanels;
+    }
+
+    public void setSolarPanels(boolean solarPanels) {
+        this.solarPanels = solarPanels;
+    }
+
+    public String getSecurityCompany() {
+        return securityCompany;
+    }
+
+    public void setSecurityCompany(String securityCompany) {
+        this.securityCompany = securityCompany;
+    }
+
+    // TODO: override toString method
+    @Override
+    public String toString() {
+        return "House [location=" + location + ", numFloors=" + numFloors + ", numRooms=" + numRooms + ", pool=" + pool
+                + ", appliances=" + appliances + ", solarPanels=" + solarPanels + ", securityCompany=" + securityCompany
+                + "]";
+    }
+
+    static class HouseBuilder {
+        private String location; // mandatory
+        private int numFloors; // mandatory
+        private int numRooms; // mandatory
+        private boolean pool; // optional
+        private boolean appliances; // optional
+        private boolean solarPanels; // optional
+        private String securityCompany; // optional
+
+        // TODO: complete the house builder constructor only with the mandatory
+        // facilities
+        public HouseBuilder(String location, int numFloors, int numRooms) {
+            this.location = location;
+            this.numFloors = numFloors;
+            this.numRooms = numRooms;
+        }
+
+        // TODO: add the optional facilities in a builder design
+        public HouseBuilder pool(boolean pool) {
+            this.pool = pool;
+
+            return this;
+        }
+
+        public HouseBuilder appliances(boolean appliances) {
+            this.appliances = appliances;
+
+            return this;
+        }
+
+        public HouseBuilder solarPanels(boolean solarPanels) {
+            this.solarPanels = solarPanels;
+
+            return this;
+        }
+
+        public HouseBuilder securityCompany(String securityCompany) {
+            this.securityCompany = securityCompany;
+
+            return this;
+        }
+
+        // TODO: complete the final build method
+        public House build() {
+            return new House(this);
+        }
+    }
+}
