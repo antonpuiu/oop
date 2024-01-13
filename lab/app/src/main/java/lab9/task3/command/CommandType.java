@@ -1,4 +1,4 @@
-package lab9.task3;
+package lab9.task3.command;
 
 public enum CommandType {
     DRAW_RECTANGLE("draw rectangle"),

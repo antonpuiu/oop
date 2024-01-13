@@ -2,6 +2,7 @@ package lab9.task3;
 
 import lab9.task3.command.ChangeColorCommand;
 import lab9.task3.command.ChangeTextCommand;
+import lab9.task3.command.CommandType;
 import lab9.task3.command.ConnectComponentsCommand;
 import lab9.task3.command.DrawCommand;
 import lab9.task3.command.DrawRectangleCommand;
