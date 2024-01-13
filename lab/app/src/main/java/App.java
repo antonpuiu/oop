@@ -27,7 +27,7 @@ public class App extends AppUnitTask {
             new lab6.Main(),
             new lab7.Main(),
             new lab8.Main(),
-            // new lab9.Main(),
+            new lab9.Main(),
             // new lab10.Main(),
             // new lab11.Main(),
             // new lab12.Main()
