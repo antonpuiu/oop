@@ -9,7 +9,6 @@ public class House {
     private boolean solarPanels; // optional
     private String securityCompany; // optional
 
-    // TODO: complete the private constructor
     private House(HouseBuilder builder) {
         location = builder.location;
         numFloors = builder.numFloors;
@@ -20,7 +19,6 @@ public class House {
         securityCompany = builder.securityCompany;
     }
 
-    // TODO: generate getters
     public String getLocation() {
         return location;
     }
@@ -77,7 +75,6 @@ public class House {
         this.securityCompany = securityCompany;
     }
 
-    // TODO: override toString method
     @Override
     public String toString() {
         return "House [location=" + location + ", numFloors=" + numFloors + ", numRooms=" + numRooms + ", pool=" + pool
@@ -94,15 +91,12 @@ public class House {
         private boolean solarPanels; // optional
         private String securityCompany; // optional
 
-        // TODO: complete the house builder constructor only with the mandatory
-        // facilities
         public HouseBuilder(String location, int numFloors, int numRooms) {
             this.location = location;
             this.numFloors = numFloors;
             this.numRooms = numRooms;
         }
 
-        // TODO: add the optional facilities in a builder design
         public HouseBuilder pool(boolean pool) {
             this.pool = pool;
 
@@ -127,7 +121,6 @@ public class House {
             return this;
         }
 
-        // TODO: complete the final build method
         public House build() {
             return new House(this);
         }

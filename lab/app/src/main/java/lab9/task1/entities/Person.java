@@ -11,7 +11,6 @@ public class Person implements BalanceObserver {
     private Integer balance;
     private Integer limit;
 
-    // TODO - All args constructor, getters, setters
     public Person(String IBAN, String cardNumber, String name, String surname, Integer balance, Integer limit) {
         this.IBAN = IBAN;
         this.cardNumber = cardNumber;

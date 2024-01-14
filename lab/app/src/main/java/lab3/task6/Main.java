@@ -1,6 +1,6 @@
 package lab3.task6;
 
-import utils.*;
+import utils.TaskUnitTask;
 
 public class Main extends TaskUnitTask {
     @Override

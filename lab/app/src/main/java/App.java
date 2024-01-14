@@ -1,8 +1,3 @@
-import utils.AppUnitTask;
-import utils.MainTask;
-
-import java.util.Properties;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
@@ -11,6 +6,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.AppRunner;
+import utils.AppUnitTask;
+import utils.MainTask;
 
 public class App extends AppUnitTask {
     private static void simpleApp() {
