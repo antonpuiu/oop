@@ -6,6 +6,8 @@ public class Main extends LabUnitTask {
     @Override
     public MainTask[] getTasks() {
         MainTask[] tasks = {
+            new lab11.kotlin.Main(),
+            new lab11.entities.Main()
         };
 
         return tasks;

@@ -8,6 +8,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    kotlin("jvm") version "1.9.22"
 }
 
 repositories {
@@ -23,6 +24,11 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+
+    // SWT
+    implementation("org.eclipse.swt:org.eclipse.swt.gtk.linux.x86_64:4.3")
+    implementation("org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64:4.3")
+    implementation("org.eclipse.swt:org.eclipse.swt.cocoa.macosx.x86_64:4.3")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
