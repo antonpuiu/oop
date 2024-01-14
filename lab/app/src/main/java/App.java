@@ -116,7 +116,7 @@ public class App extends AppUnitTask {
             new lab9.Main(),
             new lab10.Main(),
             new lab11.Main(),
-            // new lab12.Main()
+            new lab12.Main()
         };
 
         return tasks;
