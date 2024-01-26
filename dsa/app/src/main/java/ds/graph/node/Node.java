@@ -1,8 +1,6 @@
 package ds.graph.node;
 
-import ds.graph.node.visitor.NodeVisitor;
-
-public abstract class Node<DataType, IndexType> {
+public class Node<DataType, IndexType> {
     protected DataType data;
     protected IndexType index;
     protected NodeColor color;
@@ -10,6 +8,7 @@ public abstract class Node<DataType, IndexType> {
     public Node(DataType data, IndexType index) {
         this.data = data;
         this.index = index;
+
         color = NodeColor.WHITE;
     }
 
@@ -33,7 +32,14 @@ public abstract class Node<DataType, IndexType> {
         return index;
     }
 
-    public abstract void accept(NodeVisitor<DataType, IndexType> visitor);
+    protected String baseToString() {
+        return "Node [data=" + data + ", index=" + index + ", color=" + color + "]";
+    }
+
+    @Override
+    public String toString() {
+        return baseToString();
+    }
 
     public enum NodeColor {
         WHITE,

@@ -2,15 +2,15 @@ package ds.graph.list;
 
 import java.util.Iterator;
 
+import ds.graph.Edge;
 import ds.graph.node.Node;
-import ds.graph.node.visitor.NodeVisitor;
 import ds.list.List;
 import ds.list.custom.ArrayList;
 
 public class ListNode<DataType, IndexType>
-    extends Node<DataType, IndexType>
-    implements Iterable<ListNode<DataType, IndexType>.Edge> {
-    private ArrayList<Edge> neighbors;
+        extends Node<DataType, IndexType>
+        implements Iterable<ListNode<DataType, IndexType>> {
+    private ArrayList<Edge<DataType, IndexType>> neighbors;
 
     public ListNode(DataType data, IndexType index) {
         super(data, index);
@@ -19,83 +19,67 @@ public class ListNode<DataType, IndexType>
     }
 
     public void addNeighbor(ListNode<DataType, IndexType> node) {
-        neighbors.add(new Edge(this, node, null));
+        neighbors.add(new Edge<>(this, node, null));
+    }
+
+    public void addNeighbor(ListNode<DataType, IndexType> node, double weight) {
+        neighbors.add(new Edge<>(this, node, weight));
     }
 
     public void addNeighbors(List<ListNode<DataType, IndexType>> nodes) {
         for (var node : nodes)
-            neighbors.add(new Edge(this, node, null));
-    }
-
-    public void addNeighbor(ListNode<DataType, IndexType> node, double weight) {
-        neighbors.add(new Edge(this, node, weight));
+            neighbors.add(new Edge<>(this, node, null));
     }
 
     public void removeNeighbor(Node<DataType, IndexType> node) {
         for (var neighbor : neighbors) {
             if (neighbor.getDst().equals(node)) {
                 neighbors.remove(neighbor);
-                break;
+                return;
             }
         }
     }
 
-    @Override
-    public void accept(NodeVisitor<DataType, IndexType> visitor) {
-        visitor.visit(this);
-    }
+    public List<ListNode<DataType, IndexType>> getNeighbors() {
+        ArrayList<ListNode<DataType, IndexType>> result = new ArrayList<>();
 
-    @Override
-    public Iterator<Edge> iterator() {
-        return neighbors.iterator();
+        for (Edge<DataType, IndexType> edge : neighbors)
+            result.add(edge.getDst());
+
+        return result;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("{" + data.toString() + "|" + index.toString() + "}" + "[");
-        builder.append("(" +
-                           neighbors.get(0).getDst().data.toString() +
-                           ", " +
-                           neighbors.get(0).getDst().index.toString() +
-                           ")");
+        builder.append("ListNode [" + super.toString() + ", neighbors=[");
+
+        if (neighbors.size() == 0)
+            return builder.append("]]").toString();
+
+        builder.append(neighbors.get(0).getDst().baseToString());
 
         for (int i = 1; i < neighbors.size(); i++)
-            builder.append(", (" +
-                           neighbors.get(i).getDst().data.toString() +
-                           ", " +
-                           neighbors.get(i).getDst().index.toString() +
-                           ")");
+            builder.append(", " + neighbors.get(i).getDst().baseToString());
 
-        return builder.append("]").toString();
+        return builder.append("]]").toString();
     }
 
-    public class Edge {
-        private ListNode<DataType, IndexType> src;
-        private ListNode<DataType, IndexType> dst;
-        private Double weight;
+    @Override
+    public Iterator<ListNode<DataType, IndexType>> iterator() {
+        return new Iterator<ListNode<DataType,IndexType>>() {
+            private int crt = 0;
 
-        public Edge(ListNode<DataType, IndexType> src, ListNode<DataType, IndexType> dst) {
-            this.src = src;
-            this.dst = dst;
-        }
+            @Override
+            public boolean hasNext() {
+                return crt < neighbors.size();
+            }
 
-        public Edge(ListNode<DataType, IndexType> src, ListNode<DataType, IndexType> dst, Double weight) {
-            this(src, dst);
-            this.weight = weight;
-        }
-
-        public ListNode<DataType, IndexType> getSrc() {
-            return src;
-        }
-
-        public ListNode<DataType, IndexType> getDst() {
-            return dst;
-        }
-
-        public double getWeight() {
-            return weight;
-        }
+            @Override
+            public ListNode<DataType, IndexType> next() {
+                return neighbors.get(crt++).getDst();
+            }
+        };
     }
 }

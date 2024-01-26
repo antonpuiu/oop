@@ -358,7 +358,7 @@ public class SimpleLinkedList<T> implements List<T> {
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
-            private SimpleNode<T> crt;
+            private SimpleNode<T> crt = null;
 
             @Override
             public T next() {
