@@ -3,19 +3,19 @@ package ds.graph.list;
 import java.util.Iterator;
 
 import ds.graph.Graph;
-import ds.graph.node.visitor.NodeVisitor;
+import ds.graph.visitor.GraphVisitor;
 import ds.list.List;
 
 public class ListGraph<NodeType extends ListNode<DataType, IndexType>, DataType, IndexType>
-    extends Graph<NodeType, DataType, IndexType>
-    implements Iterable<NodeType> {
+        extends Graph<NodeType, DataType, IndexType>
+        implements Iterable<NodeType> {
     @Override
     public Iterator<NodeType> iterator() {
         return nodes.iterator();
     }
 
     @Override
-    public void accept(NodeVisitor<NodeType, DataType, IndexType> visitor, IndexType index) {
+    public void accept(GraphVisitor<NodeType, DataType, IndexType> visitor, IndexType index) {
         visitor.visit(this, index);
     }
 

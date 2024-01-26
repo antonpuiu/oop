@@ -1,7 +1,7 @@
 package ds.graph;
 
 import ds.graph.node.Node;
-import ds.graph.node.visitor.NodeVisitor;
+import ds.graph.visitor.GraphVisitor;
 import ds.list.List;
 import ds.set.VectorSet;
 
@@ -37,5 +37,5 @@ public abstract class Graph<NodeType extends Node<DataType, IndexType>, DataType
     }
 
     public abstract List<NodeType> getNeighbors(IndexType index);
-    public abstract void accept(NodeVisitor<NodeType, DataType, IndexType> visitor, IndexType index);
+    public abstract void accept(GraphVisitor<NodeType, DataType, IndexType> visitor, IndexType index);
 }

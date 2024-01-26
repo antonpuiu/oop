@@ -1,15 +1,15 @@
-package ds.graph.node.visitor.dfs;
+package ds.graph.visitor.dfs;
 
 import ds.graph.Graph;
 import ds.graph.node.Node;
 import ds.graph.node.Node.NodeColor;
-import ds.graph.node.visitor.NodeVisitor;
+import ds.graph.visitor.GraphVisitor;
 import ds.list.List;
 import ds.stack.ListStack;
 import ds.stack.Stack;
 
 public abstract class DFSVisitor<NodeType extends Node<DataType, IndexType>, DataType, IndexType>
-    implements NodeVisitor<NodeType, DataType, IndexType> {
+    implements GraphVisitor<NodeType, DataType, IndexType> {
     private Stack<NodeType> stack;
 
     public DFSVisitor() {

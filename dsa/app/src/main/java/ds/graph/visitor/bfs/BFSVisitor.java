@@ -1,14 +1,14 @@
-package ds.graph.node.visitor.bfs;
+package ds.graph.visitor.bfs;
 
 import ds.graph.Graph;
 import ds.graph.node.Node;
 import ds.graph.node.Node.NodeColor;
-import ds.graph.node.visitor.NodeVisitor;
+import ds.graph.visitor.GraphVisitor;
 import ds.queue.ListQueue;
 import ds.queue.Queue;
 
 public abstract class BFSVisitor<NodeType extends Node<DataType, IndexType>, DataType, IndexType>
-    implements NodeVisitor<NodeType, DataType, IndexType> {
+    implements GraphVisitor<NodeType, DataType, IndexType> {
     private Queue<NodeType> queue;
 
     public BFSVisitor() {

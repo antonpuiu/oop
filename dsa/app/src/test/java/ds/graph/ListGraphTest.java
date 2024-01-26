@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import ds.DSTest;
 import ds.graph.list.ListGraph;
 import ds.graph.list.ListNode;
-import ds.graph.node.visitor.NodeVisitor;
-import ds.graph.node.visitor.bfs.BFSPrintVisitor;
-import ds.graph.node.visitor.dfs.DFSPrintVisitor;
+import ds.graph.visitor.GraphVisitor;
+import ds.graph.visitor.bfs.BFSPrintVisitor;
+import ds.graph.visitor.dfs.DFSPrintVisitor;
 
 public class ListGraphTest extends DSTest<ListGraph<ListNode<Integer, Integer>, Integer, Integer>> {
     @Override
@@ -44,7 +44,7 @@ public class ListGraphTest extends DSTest<ListGraph<ListNode<Integer, Integer>, 
 
         node4.addNeighbor(node1);
 
-        NodeVisitor<ListNode<Integer, Integer>, Integer, Integer> bfs = new BFSPrintVisitor<>();
+        GraphVisitor<ListNode<Integer, Integer>, Integer, Integer> bfs = new BFSPrintVisitor<>();
 
         for (var node : ds)
             ds.accept(bfs, node.getIndex());
@@ -79,7 +79,7 @@ public class ListGraphTest extends DSTest<ListGraph<ListNode<Integer, Integer>, 
 
         node4.addNeighbor(node1);
 
-        NodeVisitor<ListNode<Integer, Integer>, Integer, Integer> dfs = new DFSPrintVisitor<>();
+        GraphVisitor<ListNode<Integer, Integer>, Integer, Integer> dfs = new DFSPrintVisitor<>();
 
         for (var node : ds)
             ds.accept(dfs, node.getIndex());

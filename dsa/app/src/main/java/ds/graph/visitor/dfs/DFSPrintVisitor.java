@@ -1,4 +1,4 @@
-package ds.graph.node.visitor.dfs;
+package ds.graph.visitor.dfs;
 
 import ds.graph.node.Node;
 
