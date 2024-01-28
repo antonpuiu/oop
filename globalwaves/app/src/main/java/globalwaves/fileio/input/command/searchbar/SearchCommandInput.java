@@ -1,19 +1,11 @@
 package globalwaves.fileio.input.command.searchbar;
 
-// import com.fasterxml.jackson.annotation.JsonSubTypes;
-// import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.visitor.CommandVisitor;
 
-// @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-// @JsonSubTypes({
-//         @JsonSubTypes.Type(value = SongSearchCommandInput.class, name = "song"),
-//         @JsonSubTypes.Type(value = PodcastSearchCommandInput.class, name = "podcast"),
-//         @JsonSubTypes.Type(value = PlaylistSearchCommandInput.class, name = "playlist")
-// })
 @JsonDeserialize(using = SearchCommandInputDeserializer.class)
 public class SearchCommandInput extends CommandInput {
     private String type;

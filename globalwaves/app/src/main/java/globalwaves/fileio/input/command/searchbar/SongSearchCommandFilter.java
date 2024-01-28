@@ -13,6 +13,18 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
     public SongSearchCommandFilter() {
     }
 
+    public SongSearchCommandFilter(String name, String album, ArrayList<String> tags, String lyrics, String genre,
+            String releaseYear, String artist) {
+        super(name);
+
+        this.album = album;
+        this.tags = tags;
+        this.lyrics = lyrics;
+        this.genre = genre;
+        this.releaseYear = releaseYear;
+        this.artist = artist;
+    }
+
     public String getAlbum() {
         return album;
     }
