@@ -2,10 +2,7 @@ package globalwaves.fileio.input.command.searchbar;
 
 import java.util.ArrayList;
 
-import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.visitor.CommandVisitor;
-
-public class SongSearchCommandInput extends SearchCommandInput {
+public class SongSearchCommandFilter extends SearchCommandFilter {
     private String album;
     private ArrayList<String> tags;
     private String lyrics;
@@ -13,7 +10,7 @@ public class SongSearchCommandInput extends SearchCommandInput {
     private String releaseYear;
     private String artist;
 
-    public SongSearchCommandInput() {
+    public SongSearchCommandFilter() {
     }
 
     public String getAlbum() {
@@ -62,10 +59,5 @@ public class SongSearchCommandInput extends SearchCommandInput {
 
     public void setArtist(String artist) {
         this.artist = artist;
-    }
-
-    @Override
-    public CommandOutput accept(CommandVisitor visitor) {
-        return visitor.visit(this);
     }
 }

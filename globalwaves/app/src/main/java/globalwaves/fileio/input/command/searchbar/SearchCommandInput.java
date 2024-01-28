@@ -1,28 +1,31 @@
 package globalwaves.fileio.input.command.searchbar;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+// import com.fasterxml.jackson.annotation.JsonSubTypes;
+// import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import globalwaves.fileio.input.command.CommandInput;
+import globalwaves.fileio.output.command.CommandOutput;
+import globalwaves.visitor.CommandVisitor;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = SongSearchCommandInput.class, name = "song"),
-        @JsonSubTypes.Type(value = PodcastSearchCommandInput.class, name = "podcast"),
-        @JsonSubTypes.Type(value = PlaylistSearchCommandInput.class, name = "playlist")
-})
+// @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+// @JsonSubTypes({
+//         @JsonSubTypes.Type(value = SongSearchCommandInput.class, name = "song"),
+//         @JsonSubTypes.Type(value = PodcastSearchCommandInput.class, name = "podcast"),
+//         @JsonSubTypes.Type(value = PlaylistSearchCommandInput.class, name = "playlist")
+// })
 @JsonDeserialize(using = SearchCommandInputDeserializer.class)
-public abstract class SearchCommandInput extends CommandInput {
+public class SearchCommandInput extends CommandInput {
     private String type;
-    private String name;
+    private SearchCommandFilter filters;
 
-    public String getName() {
-        return name;
+    public SearchCommandInput() {
+        this(null, null);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public SearchCommandInput(String type, SearchCommandFilter filters) {
+        this.type = type;
+        this.filters = filters;
     }
 
     public String getType() {
@@ -31,5 +34,18 @@ public abstract class SearchCommandInput extends CommandInput {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public SearchCommandFilter getFilters() {
+        return filters;
+    }
+
+    public void setFilters(SearchCommandFilter filters) {
+        this.filters = filters;
+    }
+
+    @Override
+    public CommandOutput accept(CommandVisitor visitor) {
+        return null;
     }
 }

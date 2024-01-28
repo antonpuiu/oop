@@ -19,20 +19,18 @@ public class SearchCommandInputDeserializer extends StdDeserializer<SearchComman
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
         JsonNode jsonNode = jsonParser.readValueAsTree();
 
-        JsonNode typeNode = jsonNode.get("type");
-        String type = (typeNode != null && !typeNode.isNull()) ? typeNode.asText() : "defaultType";
-
-        if (typeNode == null) {
-            System.out.println(jsonNode);
-        }
+        String type = jsonNode.get("type").asText();
 
         switch (type) {
             case "song":
-                return mapper.readValue(jsonNode.toString(), SongSearchCommandInput.class);
+                return new SearchCommandInput(type,
+                        mapper.readValue(jsonNode.toString(), SongSearchCommandFilter.class));
             case "podcast":
-                return mapper.readValue(jsonNode.toString(), PodcastSearchCommandInput.class);
+                return new SearchCommandInput(type,
+                        mapper.readValue(jsonNode.toString(), PodcastSearchCommandFilter.class));
             case "playlist":
-                return mapper.readValue(jsonNode.toString(), PlaylistSearchCommandInput.class);
+                return new SearchCommandInput(type,
+                        mapper.readValue(jsonNode.toString(), PlaylistSearchCommandFilter.class));
             default:
                 return null;
         }

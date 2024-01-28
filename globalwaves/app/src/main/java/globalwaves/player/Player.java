@@ -17,10 +17,8 @@ import globalwaves.fileio.input.command.playlist.CreatePlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.FollowPlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.ShowPlaylistsCommandInput;
 import globalwaves.fileio.input.command.playlist.SwitchVisibilityCommandInput;
-import globalwaves.fileio.input.command.searchbar.PlaylistSearchCommandInput;
-import globalwaves.fileio.input.command.searchbar.PodcastSearchCommandInput;
+import globalwaves.fileio.input.command.searchbar.SearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SelectCommandInput;
-import globalwaves.fileio.input.command.searchbar.SongSearchCommandInput;
 import globalwaves.fileio.input.command.users.ShowPreferredSongsCommandInput;
 import globalwaves.fileio.input.library.LibraryInput;
 import globalwaves.fileio.output.command.CommandOutput;
@@ -31,19 +29,7 @@ public class Player implements CommandVisitor {
     }
 
     @Override
-    public CommandOutput visit(SongSearchCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(PodcastSearchCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(PlaylistSearchCommandInput command) {
+    public CommandOutput visit(SearchCommandInput command) {
         // TODO Auto-generated method stub
         return null;
     }
