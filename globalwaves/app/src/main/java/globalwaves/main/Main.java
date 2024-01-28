@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -52,16 +50,16 @@ public final class Main {
         Files.createDirectories(path);
 
         for (File file : Objects.requireNonNull(directory.listFiles())) {
-            if (file.getName().startsWith("library")) {
+            if (file.getName().startsWith("library") ||
+                    !file.getName().contains("test01")) {
                 continue;
             }
 
             String filepath = CheckerConstants.OUT_PATH + file.getName();
             File out = new File(filepath);
-            // boolean isCreated = out.createNewFile();
-            if (true) {
-                // if (isCreated) {
-                action(file.getAbsolutePath(), null);
+            boolean isCreated = out.createNewFile();
+            if (isCreated) {
+                action(file.getAbsolutePath(), filepath);
             }
         }
 
@@ -77,18 +75,19 @@ public final class Main {
             throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         LibraryInput library = objectMapper.readValue(new File(LIBRARY_PATH), LibraryInput.class);
-        List<CommandInput> commands = objectMapper.readValue(new File(filePathInput),
-                new TypeReference<List<CommandInput>>() {
-                });
+        CommandInput[] commands = objectMapper.readValue(new File(filePathInput), CommandInput[].class);
+
+        for (var command : commands)
+            System.out.println(command);
 
         player.loadLibrary(library);
         ArrayNode outputs = objectMapper.createArrayNode();
 
-        for (CommandInput command : commands)
-            if (command != null)
-                outputs.add(objectMapper.valueToTree(command.accept(player)));
+        for (CommandInput command : commands) {
+            outputs.add(objectMapper.valueToTree(command.accept(player)));
+        }
 
-        // ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
-        // objectWriter.writeValue(new File(filePathOutput), outputs);
+        ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+        objectWriter.writeValue(new File(filePathOutput), outputs);
     }
 }

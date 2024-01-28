@@ -1,8 +1,8 @@
-package globalwaves.fileio.input.command.searchbar;
+package globalwaves.fileio.input.command.searchbar.filter;
 
 import java.util.ArrayList;
 
-public class SongSearchCommandFilter extends SearchCommandFilter {
+public final class SongSearchCommandFilter extends SearchCommandFilter {
     private String album;
     private ArrayList<String> tags;
     private String lyrics;
@@ -13,8 +13,9 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
     public SongSearchCommandFilter() {
     }
 
-    public SongSearchCommandFilter(String name, String album, ArrayList<String> tags, String lyrics, String genre,
-            String releaseYear, String artist) {
+    public SongSearchCommandFilter(final String name, final String album,
+            final ArrayList<String> tags, final String lyrics, final String genre,
+            final String releaseYear, final String artist) {
         super(name);
 
         this.album = album;
@@ -29,7 +30,7 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
         return album;
     }
 
-    public void setAlbum(String album) {
+    public void setAlbum(final String album) {
         this.album = album;
     }
 
@@ -37,7 +38,7 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
         return tags;
     }
 
-    public void setTags(ArrayList<String> tags) {
+    public void setTags(final ArrayList<String> tags) {
         this.tags = tags;
     }
 
@@ -45,7 +46,7 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
         return lyrics;
     }
 
-    public void setLyrics(String lyrics) {
+    public void setLyrics(final String lyrics) {
         this.lyrics = lyrics;
     }
 
@@ -53,7 +54,7 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(final String genre) {
         this.genre = genre;
     }
 
@@ -61,7 +62,7 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
         return releaseYear;
     }
 
-    public void setReleaseYear(String releaseYear) {
+    public void setReleaseYear(final String releaseYear) {
         this.releaseYear = releaseYear;
     }
 
@@ -69,7 +70,15 @@ public class SongSearchCommandFilter extends SearchCommandFilter {
         return artist;
     }
 
-    public void setArtist(String artist) {
+    public void setArtist(final String artist) {
         this.artist = artist;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "SongSearchCommandFilter [album=" + album + ", tags=" + tags + ", lyrics=" + lyrics
+                + ", genre=" + genre
+                + ", releaseYear=" + releaseYear + ", artist=" + artist + "]";
+    }
+
 }

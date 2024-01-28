@@ -24,7 +24,7 @@ import globalwaves.fileio.input.command.searchbar.SearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SelectCommandInput;
 import globalwaves.fileio.input.command.users.ShowPreferredSongsCommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.visitor.CommandVisitor;
+import globalwaves.visitor.command.CommandVisitor;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "command")
 @JsonSubTypes({
@@ -63,6 +63,20 @@ public abstract class CommandInput {
     private String username;
     private int timestamp;
 
+    public CommandInput() {
+        this(null, null, 0);
+    }
+
+    public CommandInput(String command) {
+        this(command, null, 0);
+    }
+
+    public CommandInput(String command, String username, int timestamp) {
+        this.command = command;
+        this.username = username;
+        this.timestamp = timestamp;
+    }
+
     public String getCommand() {
         return command;
     }
@@ -87,5 +101,10 @@ public abstract class CommandInput {
         this.timestamp = timestamp;
     }
 
-    public abstract CommandOutput accept(CommandVisitor visitor);
+    public abstract CommandOutput accept(final CommandVisitor visitor);
+
+    @Override
+    public String toString() {
+        return "CommandInput [command=" + command + ", username=" + username + ", timestamp=" + timestamp + "]";
+    }
 }

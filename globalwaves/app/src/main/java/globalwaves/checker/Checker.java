@@ -17,7 +17,8 @@ public final class Checker {
   private static int readmeScore;
   private static int totalScore = 0;
 
-  private Checker() {}
+  private Checker() {
+  }
 
   private static void calculateScoreGit() {
     System.out.print(".GIT score = ");
@@ -49,7 +50,10 @@ public final class Checker {
     }
   }
 
-  /** This method is used to calculate total score of the implementation and checkstyle */
+  /**
+   * This method is used to calculate total score of the implementation and
+   * checkstyle
+   */
   public static void calculateScore() throws IOException {
     System.out.println();
     calculateScoreAllTests();
@@ -76,7 +80,8 @@ public final class Checker {
   /**
    * This method is used to calculate score of implementation
    *
-   * <p>18 tests (80 points maximum)
+   * <p>
+   * 18 tests (80 points maximum)
    */
   private static void calculateScoreAllTests() throws IOException {
     File directory = new File(CheckerConstants.TESTS_PATH);

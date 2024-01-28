@@ -7,32 +7,42 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-public class SearchCommandInputDeserializer extends StdDeserializer<SearchCommandInput> {
+import globalwaves.fileio.input.command.searchbar.filter.PlaylistSearchCommandFilter;
+import globalwaves.fileio.input.command.searchbar.filter.PodcastSearchCommandFilter;
+import globalwaves.fileio.input.command.searchbar.filter.SearchCommandFilter;
+import globalwaves.fileio.input.command.searchbar.filter.SongSearchCommandFilter;
+
+public final class SearchCommandInputDeserializer extends StdDeserializer<SearchCommandInput> {
 
     public SearchCommandInputDeserializer() {
         super(SearchCommandInput.class);
     }
 
     @Override
-    public SearchCommandInput deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        JsonNode node = p.readValueAsTree();
+    public SearchCommandInput deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        SearchCommandInput result = null;
+        JsonNode node = new ObjectMapper().readTree(p);
         String type = node.get("type").asText();
+
+        System.out.println(node);
 
         SearchCommandFilter filters = null;
 
-        // Depending on the 'type', create and return the appropriate subclass
-        if ("song".equals(type)) {
-            String name = Optional.ofNullable(node.get("name")).map(x -> x.asText()).orElse(null);
-            String album = Optional.ofNullable(node.get("album")).map(x -> x.asText()).orElse(null);
-            ArrayList<String> tags = null;
-            String lyrics = Optional.ofNullable(node.get("lyrics")).map(x -> x.asText()).orElse(null);
-            String genre = Optional.ofNullable(node.get("genre")).map(x -> x.asText()).orElse(null);
-            String releaseYear = Optional.ofNullable(node.get("releaseYear")).map(x -> x.asText()).orElse(null);
-            String artist = Optional.ofNullable(node.get("artist")).map(x -> x.asText()).orElse(null);
+        JsonNode filtersNode = node.get("filters");
 
-            JsonNode tagsNode = node.get("tags");
+        if ("song".equals(type)) {
+            String name = filtersNode.has("name") ? filtersNode.get("name").asText() : null;
+            String album = filtersNode.has("album") ? filtersNode.get("album").asText() : null;
+            ArrayList<String> tags = null;
+            String lyrics = filtersNode.has("lyrics") ? filtersNode.get("lyrics").asText() : null;
+            String genre = filtersNode.has("genre") ? filtersNode.get("genre").asText() : null;
+            String releaseYear = filtersNode.has("releaseYear") ? filtersNode.get("releaseYear").asText() : null;
+            String artist = filtersNode.has("artist") ? filtersNode.get("artist").asText() : null;
+
+            JsonNode tagsNode = filtersNode.get("tags");
 
             if (tagsNode != null) {
                 tags = new ArrayList<>();
@@ -41,21 +51,27 @@ public class SearchCommandInputDeserializer extends StdDeserializer<SearchComman
                     tags.add(tag.asText());
             }
 
-            filters = new SongSearchCommandFilter(name, album, tags, lyrics, genre, releaseYear, artist);
+            filters = new SongSearchCommandFilter(name, album, tags, lyrics, genre, releaseYear,
+                    artist);
         } else if ("podcast".equals(type)) {
-            String name = Optional.ofNullable(node.get("name")).map(x -> x.asText()).orElse(null);
-            String owner = Optional.ofNullable(node.get("owner")).map(x -> x.asText()).orElse(null);
+            String name = (filtersNode.get("name") != null) ? filtersNode.get("name").asText() : null;
+            String owner = (filtersNode.get("owner") != null) ? filtersNode.get("owner").asText() : null;
 
             filters = new PodcastSearchCommandFilter(name, owner);
         } else if ("playlist".equals(type)) {
-            String name = Optional.ofNullable(node.get("name")).map(x -> x.asText()).orElse(null);
-            String owner = Optional.ofNullable(node.get("owner")).map(x -> x.asText()).orElse(null);
+            String name = (filtersNode.get("name") != null) ? filtersNode.get("name").asText() : null;
+            String owner = (filtersNode.get("owner") != null) ? filtersNode.get("owner").asText() : null;
 
-            filters = new PlaylistSearchCommandFilter();
+            filters = new PlaylistSearchCommandFilter(name, owner);
         } else {
             throw new IOException("Unknown 'type' value: " + type);
         }
 
-        return new SearchCommandInput(type, filters);
+        result = new SearchCommandInput("search", type, filters);
+
+        result.setUsername(node.has("username") ? node.get("username").asText() : null);
+        result.setTimestamp(node.has("timestamp") ? node.get("timestamp").asInt() : null);
+
+        return result;
     }
 }

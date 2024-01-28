@@ -2,9 +2,9 @@ package globalwaves.fileio.input.command.player;
 
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.visitor.CommandVisitor;
+import globalwaves.visitor.command.CommandVisitor;
 
-public class AddRemoveInPlaylistCommandInput extends CommandInput {
+public final class AddRemoveInPlaylistCommandInput extends CommandInput {
     private int playlistId;
 
     public int getPlaylistId() {
@@ -16,7 +16,7 @@ public class AddRemoveInPlaylistCommandInput extends CommandInput {
     }
 
     @Override
-    public CommandOutput accept(CommandVisitor visitor) {
+    public CommandOutput accept(final CommandVisitor visitor) {
         return visitor.visit(this);
     }
 }

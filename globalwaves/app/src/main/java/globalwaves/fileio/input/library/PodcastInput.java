@@ -2,35 +2,42 @@ package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
 
-public final class PodcastInput {
-  private String name;
-  private String owner;
-  private ArrayList<EpisodeInput> episodes;
+import globalwaves.entity.AudioCollection;
 
-  public PodcastInput() {
-  }
+public final class PodcastInput implements AudioCollection {
+    private String name;
+    private String owner;
+    private ArrayList<EpisodeInput> episodes;
 
-  public String getName() {
-    return name;
-  }
+    public PodcastInput() {
+    }
 
-  public void setName(final String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getOwner() {
-    return owner;
-  }
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-  public void setOwner(final String owner) {
-    this.owner = owner;
-  }
+    public String getOwner() {
+        return owner;
+    }
 
-  public ArrayList<EpisodeInput> getEpisodes() {
-    return episodes;
-  }
+    public void setOwner(final String owner) {
+        this.owner = owner;
+    }
 
-  public void setEpisodes(final ArrayList<EpisodeInput> episodes) {
-    this.episodes = episodes;
-  }
+    public ArrayList<EpisodeInput> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(final ArrayList<EpisodeInput> episodes) {
+        this.episodes = episodes;
+    }
+
+    @Override
+    public String toString() {
+        return "PodcastInput [name=" + name + ", owner=" + owner + ", episodes=" + episodes + "]";
+    }
 }

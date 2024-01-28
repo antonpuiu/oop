@@ -1,6 +1,8 @@
 package globalwaves.fileio.input.library;
 
-public final class EpisodeInput {
+import globalwaves.entity.AudioFile;
+
+public final class EpisodeInput implements AudioFile {
     private String name;
     private Integer duration;
     private String description;
@@ -8,6 +10,7 @@ public final class EpisodeInput {
     public EpisodeInput() {
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -30,5 +33,10 @@ public final class EpisodeInput {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "EpisodeInput [name=" + name + ", duration=" + duration + ", description=" + description + "]";
     }
 }

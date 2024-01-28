@@ -1,8 +1,8 @@
-package globalwaves.visitor;
+package globalwaves.visitor.command;
 
 import globalwaves.fileio.input.command.users.ShowPreferredSongsCommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
 
 public interface UsersCommandVisitor {
-    public CommandOutput visit(ShowPreferredSongsCommandInput visitor);
+    CommandOutput visit(ShowPreferredSongsCommandInput visitor);
 }

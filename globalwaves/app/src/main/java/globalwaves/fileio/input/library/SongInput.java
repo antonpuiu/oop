@@ -2,80 +2,90 @@ package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
 
-public final class SongInput {
-  private String name;
-  private Integer duration;
-  private String album;
-  private ArrayList<String> tags;
-  private String lyrics;
-  private String genre;
-  private Integer releaseYear;
-  private String artist;
+import globalwaves.entity.AudioFile;
 
-  public SongInput() {
-  }
+public final class SongInput implements AudioFile {
+    private String name;
+    private Integer duration;
+    private String album;
+    private ArrayList<String> tags;
+    private String lyrics;
+    private String genre;
+    private Integer releaseYear;
+    private String artist;
 
-  public String getName() {
-    return name;
-  }
+    public SongInput() {
+    }
 
-  public void setName(final String name) {
-    this.name = name;
-  }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-  public Integer getDuration() {
-    return duration;
-  }
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-  public void setDuration(final Integer duration) {
-    this.duration = duration;
-  }
+    public Integer getDuration() {
+        return duration;
+    }
 
-  public String getAlbum() {
-    return album;
-  }
+    public void setDuration(final Integer duration) {
+        this.duration = duration;
+    }
 
-  public void setAlbum(final String album) {
-    this.album = album;
-  }
+    public String getAlbum() {
+        return album;
+    }
 
-  public ArrayList<String> getTags() {
-    return tags;
-  }
+    public void setAlbum(final String album) {
+        this.album = album;
+    }
 
-  public void setTags(final ArrayList<String> tags) {
-    this.tags = tags;
-  }
+    public ArrayList<String> getTags() {
+        return tags;
+    }
 
-  public String getLyrics() {
-    return lyrics;
-  }
+    public void setTags(final ArrayList<String> tags) {
+        this.tags = tags;
+    }
 
-  public void setLyrics(final String lyrics) {
-    this.lyrics = lyrics;
-  }
+    public String getLyrics() {
+        return lyrics;
+    }
 
-  public String getGenre() {
-    return genre;
-  }
+    public void setLyrics(final String lyrics) {
+        this.lyrics = lyrics;
+    }
 
-  public void setGenre(final String genre) {
-    this.genre = genre;
-  }
+    public String getGenre() {
+        return genre;
+    }
 
-  public int getReleaseYear() {
-    return releaseYear;
-  }
+    public void setGenre(final String genre) {
+        this.genre = genre;
+    }
 
-  public void setReleaseYear(final int releaseYear) {
-    this.releaseYear = releaseYear;
-  }
+    public int getReleaseYear() {
+        return releaseYear;
+    }
 
-  public String getArtist() {
-    return artist;
-  }
+    public void setReleaseYear(final int releaseYear) {
+        this.releaseYear = releaseYear;
+    }
 
-  public void setArtist(final String artist) {
-    this.artist = artist;
-  }
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(final String artist) {
+        this.artist = artist;
+    }
+
+    @Override
+    public String toString() {
+        return "SongInput [name=" + name + ", duration=" + duration + ", album=" + album + ", tags=" + tags
+                + ", lyrics="
+                + lyrics + ", genre=" + genre + ", releaseYear=" + releaseYear + ", artist=" + artist + "]";
+    }
 }

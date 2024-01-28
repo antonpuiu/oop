@@ -2,21 +2,21 @@ package globalwaves.fileio.input.command.searchbar;
 
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.visitor.CommandVisitor;
+import globalwaves.visitor.command.CommandVisitor;
 
-public class SelectCommandInput extends CommandInput {
+public final class SelectCommandInput extends CommandInput {
     private int itemNumber;
 
     public int getItemNumber() {
         return itemNumber;
     }
 
-    public void setItemNumber(int itemNumber) {
+    public void setItemNumber(final int itemNumber) {
         this.itemNumber = itemNumber;
     }
 
     @Override
-    public CommandOutput accept(CommandVisitor visitor) {
+    public CommandOutput accept(final CommandVisitor visitor) {
         return visitor.visit(this);
     }
 }

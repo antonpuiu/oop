@@ -2,9 +2,9 @@ package globalwaves.fileio.input.command.playlist;
 
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.visitor.CommandVisitor;
+import globalwaves.visitor.command.CommandVisitor;
 
-public class CreatePlaylistCommandInput extends CommandInput {
+public final class CreatePlaylistCommandInput extends CommandInput {
     private String playlistName;
 
     public String getPlaylistName() {
@@ -16,7 +16,7 @@ public class CreatePlaylistCommandInput extends CommandInput {
     }
 
     @Override
-    public CommandOutput accept(CommandVisitor visitor) {
+    public CommandOutput accept(final CommandVisitor visitor) {
         return visitor.visit(this);
     }
 }

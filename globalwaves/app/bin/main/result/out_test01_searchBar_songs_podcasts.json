@@ -1,0 +1,67 @@
+[ {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 10,
+  "message" : "Search returned 0 results",
+  "results" : [ ]
+}, null, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 20,
+  "message" : "Search returned 3 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill" ]
+}, null, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 30,
+  "message" : "Search returned 4 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 40,
+  "message" : "Search returned 4 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 50,
+  "message" : "Search returned 4 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 60,
+  "message" : "Search returned 5 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'", "Stairway to Heaven" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 70,
+  "message" : "Search returned 5 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'", "Stairway to Heaven" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 80,
+  "message" : "Search returned 5 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'", "Stairway to Heaven" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 90,
+  "message" : "Search returned 5 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'", "Stairway to Heaven" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 100,
+  "message" : "Search returned 5 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'", "Stairway to Heaven" ]
+}, {
+  "command" : "search",
+  "user" : "alice22",
+  "timestamp" : 110,
+  "message" : "Search returned 5 results",
+  "results" : [ "Shape of You", "Happier", "Castle on the Hill", "Big Pimpin'", "Stairway to Heaven" ]
+} ]

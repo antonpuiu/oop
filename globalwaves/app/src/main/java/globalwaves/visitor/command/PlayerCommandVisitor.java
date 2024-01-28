@@ -1,4 +1,4 @@
-package globalwaves.visitor;
+package globalwaves.visitor.command;
 
 import globalwaves.fileio.input.command.player.AddRemoveInPlaylistCommandInput;
 import globalwaves.fileio.input.command.player.BackwardCommandInput;
@@ -14,25 +14,25 @@ import globalwaves.fileio.input.command.player.StatusCommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
 
 public interface PlayerCommandVisitor {
-    public CommandOutput visit(LoadCommandInput command);
+    CommandOutput visit(LoadCommandInput command);
 
-    public CommandOutput visit(PlayPauseCommandInput command);
+    CommandOutput visit(PlayPauseCommandInput command);
 
-    public CommandOutput visit(RepeatCommandInput command);
+    CommandOutput visit(RepeatCommandInput command);
 
-    public CommandOutput visit(ShuffleCommandInput command);
+    CommandOutput visit(ShuffleCommandInput command);
 
-    public CommandOutput visit(ForwardCommandInput command);
+    CommandOutput visit(ForwardCommandInput command);
 
-    public CommandOutput visit(BackwardCommandInput command);
+    CommandOutput visit(BackwardCommandInput command);
 
-    public CommandOutput visit(LikeCommandInput command);
+    CommandOutput visit(LikeCommandInput command);
 
-    public CommandOutput visit(NextCommandInput command);
+    CommandOutput visit(NextCommandInput command);
 
-    public CommandOutput visit(PrevCommandInput command);
+    CommandOutput visit(PrevCommandInput command);
 
-    public CommandOutput visit(AddRemoveInPlaylistCommandInput command);
+    CommandOutput visit(AddRemoveInPlaylistCommandInput command);
 
-    public CommandOutput visit(StatusCommandInput command);
+    CommandOutput visit(StatusCommandInput command);
 }

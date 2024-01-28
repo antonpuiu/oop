@@ -2,12 +2,19 @@ package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
 
-public final class LibraryInput {
+import globalwaves.entity.AudioCollection;
+
+public final class LibraryInput implements AudioCollection {
     private ArrayList<SongInput> songs;
     private ArrayList<PodcastInput> podcasts;
     private ArrayList<UserInput> users;
 
     public LibraryInput() {
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 
     public ArrayList<SongInput> getSongs() {
@@ -32,5 +39,10 @@ public final class LibraryInput {
 
     public void setUsers(final ArrayList<UserInput> users) {
         this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "LibraryInput [songs=" + songs + ", podcasts=" + podcasts + ", users=" + users + "]";
     }
 }
