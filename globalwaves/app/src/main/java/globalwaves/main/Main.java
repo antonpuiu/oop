@@ -58,9 +58,10 @@ public final class Main {
 
             String filepath = CheckerConstants.OUT_PATH + file.getName();
             File out = new File(filepath);
-            boolean isCreated = out.createNewFile();
-            if (isCreated) {
-                action(file.getAbsolutePath(), filepath);
+            // boolean isCreated = out.createNewFile();
+            if (true) {
+                // if (isCreated) {
+                action(file.getAbsolutePath(), null);
             }
         }
 
@@ -84,9 +85,10 @@ public final class Main {
         ArrayNode outputs = objectMapper.createArrayNode();
 
         for (CommandInput command : commands)
-            outputs.add(objectMapper.valueToTree(command.accept(player)));
+            if (command != null)
+                outputs.add(objectMapper.valueToTree(command.accept(player)));
 
-        ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
-        objectWriter.writeValue(new File(filePathOutput), outputs);
+        // ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+        // objectWriter.writeValue(new File(filePathOutput), outputs);
     }
 }
