@@ -34,6 +34,7 @@ import globalwaves.fileio.input.library.PodcastInput;
 import globalwaves.fileio.input.library.SongInput;
 import globalwaves.fileio.input.library.UserInput;
 import globalwaves.fileio.output.command.CommandOutput;
+import globalwaves.fileio.output.command.ResultsCommandOutput;
 import globalwaves.visitor.command.CommandVisitor;
 
 public class Player implements CommandVisitor {
@@ -59,21 +60,18 @@ public class Player implements CommandVisitor {
     private void searchSong(SearchCommandInput command, User currentUser) {
         SongSearchCommandFilter songFilter = (SongSearchCommandFilter) command.getFilters();
 
-        String name = songFilter.getName();
-        String album = songFilter.getAlbum();
-        ArrayList<String> tags = songFilter.getTags();
-        String lyrics = songFilter.getLyrics();
-        String genre = songFilter.getGenre();
-        String releaseYear = songFilter.getReleaseYear();
-        String artist = songFilter.getArtist();
+        String nameFilter = songFilter.getName();
+        String albumFilter = songFilter.getAlbum();
+        ArrayList<String> tagsFilter = songFilter.getTags();
+        String lyricsFilter = songFilter.getLyrics();
+        String genreFilter = songFilter.getGenre();
+        String releaseYearFilter = songFilter.getReleaseYear();
+        String artistFilter = songFilter.getArtist();
 
         Map<String, Function<SongInput, String>> map = new HashMap<>() {
             {
-                put(name, SongInput::getName);
-                put(album, SongInput::getAlbum);
-                put(lyrics, SongInput::getLyrics);
-                put(genre, SongInput::getGenre);
-                put(artist, SongInput::getArtist);
+                put(albumFilter, SongInput::getAlbum);
+                put(artistFilter, SongInput::getArtist);
             }
         };
 
@@ -87,15 +85,27 @@ public class Player implements CommandVisitor {
 
                 String mapValue = map.get(key).apply(song);
 
-                if (mapValue != null && !key.equals(mapValue)) {
+                if (!mapValue.equals(key)) {
                     passed = false;
                     break;
                 }
             }
 
-            if (releaseYear != null && passed) {
-                boolean greater = releaseYear.charAt(0) == '>';
-                int targetYear = Integer.parseInt(releaseYear.substring(1));
+            if (lyricsFilter != null && passed && !song.getLyrics().contains(lyricsFilter)) {
+                passed = false;
+            }
+
+            if (nameFilter != null && passed && !song.getName().startsWith(nameFilter)) {
+                passed = false;
+            }
+
+            if (genreFilter != null && passed && !song.getGenre().toLowerCase().equals(genreFilter.toLowerCase())) {
+                passed = false;
+            }
+
+            if (releaseYearFilter != null && passed) {
+                boolean greater = releaseYearFilter.charAt(0) == '>';
+                int targetYear = Integer.parseInt(releaseYearFilter.substring(1));
                 int songYear = song.getReleaseYear();
 
                 if ((greater && songYear < targetYear) || (!greater && songYear > targetYear)) {
@@ -103,12 +113,12 @@ public class Player implements CommandVisitor {
                 }
             }
 
-            if (tags != null && passed) {
-                for (String filterTag : tags) {
+            if (tagsFilter != null && passed) {
+                for (String commandTag : tagsFilter) {
                     boolean foundTag = false;
 
                     for (String songTag : song.getTags()) {
-                        if (songTag.equals(filterTag)) {
+                        if (songTag.equals(commandTag)) {
                             foundTag = true;
                             break;
                         }
@@ -130,35 +140,14 @@ public class Player implements CommandVisitor {
     }
 
     private void podcastSearch(SearchCommandInput command, User currentUser) {
-        PodcastSearchCommandFilter songFilter = (PodcastSearchCommandFilter) command.getFilters();
+        PodcastSearchCommandFilter podcastFilter = (PodcastSearchCommandFilter) command.getFilters();
 
-        String name = songFilter.getName();
-        String owner = songFilter.getOwner();
-
-        Map<String, Function<PodcastInput, String>> map = new HashMap<>() {
-            {
-                put(name, PodcastInput::getName);
-                put(owner, PodcastInput::getOwner);
-            }
-        };
+        String nameFilter = podcastFilter.getName();
+        String commandOwner = podcastFilter.getOwner();
 
         for (PodcastInput podcast : libraryInput.getPodcasts()) {
-            boolean passed = true;
-
-            for (String key : map.keySet()) {
-                if (key == null) {
-                    continue;
-                }
-
-                String mapValue = map.get(key).apply(podcast);
-
-                if (mapValue != null && !key.equals(mapValue)) {
-                    passed = false;
-                    continue;
-                }
-            }
-
-            if (!passed) {
+            if ((nameFilter != null && !podcast.getName().startsWith(nameFilter)) ||
+                    (commandOwner != null && !podcast.getOwner().equals(commandOwner))) {
                 continue;
             }
 
@@ -167,52 +156,34 @@ public class Player implements CommandVisitor {
     }
 
     public void playlistSearch(SearchCommandInput command, User currentUser) {
-        PlaylistSearchCommandFilter songFilter = (PlaylistSearchCommandFilter) command.getFilters();
+        PlaylistSearchCommandFilter playlistFilter = (PlaylistSearchCommandFilter) command.getFilters();
 
-        String name = songFilter.getName();
-        String owner = songFilter.getOwner();
+        String nameFilter = playlistFilter.getName();
+        String commandOwner = playlistFilter.getOwner();
 
-        Map<String, Function<Playlist, String>> map = new HashMap<>() {
-            {
-                put(name, Playlist::getName);
-                put(owner, Playlist::getOwner);
-            }
-        };
-
-        for (Playlist playlist : playlists) {
-            boolean passed = true;
-
-            for (String key : map.keySet()) {
-                if (key == null) {
-                    continue;
-                }
-
-                String mapValue = map.get(key).apply(playlist);
-
-                if (mapValue != null && !key.equals(mapValue)) {
-                    passed = false;
-                    continue;
-                }
-            }
-
-            if (!passed) {
+        for (PodcastInput podcast : libraryInput.getPodcasts()) {
+            if ((nameFilter != null && !podcast.getName().startsWith(nameFilter)) ||
+                    (commandOwner != null && !podcast.getOwner().equals(commandOwner))) {
                 continue;
             }
 
-            currentUser.addSearchResult(playlist);
+            currentUser.addSearchResult(podcast);
         }
     }
 
     @Override
-    public CommandOutput visit(SearchCommandInput command) {
+    public ResultsCommandOutput visit(SearchCommandInput command) {
         User currentUser;
         ArrayList<String> searchResult;
 
         if (!users.containsKey(command.getUsername())) {
-            return new CommandOutput(command, "User not found");
+            return new ResultsCommandOutput(command, "User not found");
         }
 
         currentUser = users.get(command.getUsername());
+        if (!currentUser.getState().equals(User.UserState.INITIAL)) {
+            currentUser.resetSearch();
+        }
 
         switch (command.getType()) {
             case "song":
@@ -229,21 +200,46 @@ public class Player implements CommandVisitor {
         currentUser.finishSearch();
         searchResult = currentUser.getSearchResults();
 
-        return new CommandOutput(command,
+        return new ResultsCommandOutput(command,
                 "Search returned " + searchResult.size() + " results",
                 searchResult);
     }
 
     @Override
     public CommandOutput visit(SelectCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
+        User currentUser;
+
+        if (!users.containsKey(command.getUsername())) {
+            return new CommandOutput(command, "User not found");
+        }
+
+        currentUser = users.get(command.getUsername());
+
+        try {
+            currentUser.selectSearchResult(command.getItemNumber() - 1);
+        } catch (RuntimeException e) {
+            return new CommandOutput(command, e.getMessage());
+        }
+
+        return new CommandOutput(command,
+                "Successfully selected " + currentUser.getCurrentSong().getName() + ".");
     }
 
     @Override
     public CommandOutput visit(LoadCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
+        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
+            return new CommandOutput(command, "User not found");
+        }
+
+        try {
+            User currentUser = users.get(command.getUsername());
+
+            currentUser.loadCurrentSong(command.getTimestamp());
+        } catch (RuntimeException e) {
+            return new CommandOutput(command, e.getMessage());
+        }
+
+        return new CommandOutput(command, "Playback loaded successfully.");
     }
 
     @Override

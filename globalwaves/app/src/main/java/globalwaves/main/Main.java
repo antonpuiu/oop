@@ -1,5 +1,15 @@
 package globalwaves.main;
 
+import globalwaves.checker.Checker;
+import globalwaves.checker.CheckerConstants;
+import globalwaves.fileio.input.command.CommandInput;
+import globalwaves.fileio.input.library.LibraryInput;
+import globalwaves.player.Player;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,31 +17,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
-import globalwaves.checker.Checker;
-import globalwaves.checker.CheckerConstants;
-import globalwaves.fileio.input.command.CommandInput;
-import globalwaves.fileio.input.library.LibraryInput;
-import globalwaves.player.Player;
-
 /**
  * The entry point to this homework. It runs the checker that tests your
  * implentation.
  */
-
 public final class Main {
     static final String LIBRARY_PATH = CheckerConstants.TESTS_PATH + "library/library.json";
     private static Player player = new Player();
 
-    /** for coding style */
+    /**
+     * for coding style
+     */
     private Main() {
     }
 
     /**
-     * DO NOT MODIFY MAIN METHOD Call the checker
+     * DO NOT MODIFY MAIN METHOD
+     * Call the checker
      *
      * @param args from command line
      * @throws IOException in case of exceptions to reading / writing
@@ -51,7 +53,7 @@ public final class Main {
 
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.getName().startsWith("library") ||
-                    !file.getName().contains("test01")) {
+                    !file.getName().contains("test02")) {
                 continue;
             }
 
@@ -71,14 +73,11 @@ public final class Main {
      * @param filePathOutput for output file
      * @throws IOException in case of exceptions to reading / writing
      */
-    public static void action(final String filePathInput, final String filePathOutput)
-            throws IOException {
+    public static void action(final String filePathInput,
+            final String filePathOutput) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         LibraryInput library = objectMapper.readValue(new File(LIBRARY_PATH), LibraryInput.class);
         CommandInput[] commands = objectMapper.readValue(new File(filePathInput), CommandInput[].class);
-
-        for (var command : commands)
-            System.out.println(command);
 
         player.loadLibrary(library);
         ArrayNode outputs = objectMapper.createArrayNode();

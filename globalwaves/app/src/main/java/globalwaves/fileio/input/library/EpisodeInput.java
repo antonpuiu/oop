@@ -39,4 +39,9 @@ public final class EpisodeInput implements AudioFile {
     public String toString() {
         return "EpisodeInput [name=" + name + ", duration=" + duration + ", description=" + description + "]";
     }
+
+    @Override
+    public boolean isCollection() {
+        return false;
+    }
 }

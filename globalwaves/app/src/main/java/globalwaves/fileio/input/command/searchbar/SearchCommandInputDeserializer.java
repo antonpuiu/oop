@@ -27,8 +27,6 @@ public final class SearchCommandInputDeserializer extends StdDeserializer<Search
         JsonNode node = new ObjectMapper().readTree(p);
         String type = node.get("type").asText();
 
-        System.out.println(node);
-
         SearchCommandFilter filters = null;
 
         JsonNode filtersNode = node.get("filters");

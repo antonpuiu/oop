@@ -88,4 +88,9 @@ public final class SongInput implements AudioFile {
                 + ", lyrics="
                 + lyrics + ", genre=" + genre + ", releaseYear=" + releaseYear + ", artist=" + artist + "]";
     }
+
+    @Override
+    public boolean isCollection() {
+        return false;
+    }
 }

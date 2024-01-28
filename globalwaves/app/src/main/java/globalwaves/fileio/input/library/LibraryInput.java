@@ -1,10 +1,12 @@
 package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import globalwaves.entity.AudioCollection;
+import globalwaves.entity.AudioFile;
 
-public final class LibraryInput implements AudioCollection {
+public final class LibraryInput extends AudioCollection {
     private ArrayList<SongInput> songs;
     private ArrayList<PodcastInput> podcasts;
     private ArrayList<UserInput> users;
@@ -44,5 +46,15 @@ public final class LibraryInput implements AudioCollection {
     @Override
     public String toString() {
         return "LibraryInput [songs=" + songs + ", podcasts=" + podcasts + ", users=" + users + "]";
+    }
+
+    @Override
+    public int getSize() {
+        return 0;
+    }
+
+    @Override
+    public List<AudioFile> getAudioFiles() {
+        return null;
     }
 }

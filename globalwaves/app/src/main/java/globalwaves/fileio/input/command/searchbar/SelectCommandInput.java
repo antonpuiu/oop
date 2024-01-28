@@ -7,6 +7,10 @@ import globalwaves.visitor.command.CommandVisitor;
 public final class SelectCommandInput extends CommandInput {
     private int itemNumber;
 
+    public SelectCommandInput() {
+        super("select");
+    }
+
     public int getItemNumber() {
         return itemNumber;
     }

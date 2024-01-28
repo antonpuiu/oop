@@ -1,7 +1,7 @@
 package globalwaves.visitor.filter;
 
-import globalwaves.fileio.input.library.SongInput;
+import globalwaves.entity.AudioFile;
 
 public interface FilterVisitor {
-    boolean visit(SongInput song);
+    boolean visit(AudioFile song);
 }
