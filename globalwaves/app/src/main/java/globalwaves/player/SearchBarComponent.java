@@ -5,56 +5,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import globalwaves.entity.Playlist;
-import globalwaves.fileio.input.command.general.GetTop5PlaylistsCommandInput;
-import globalwaves.fileio.input.command.general.GetTop5SongsCommandInput;
-import globalwaves.fileio.input.command.player.AddRemoveInPlaylistCommandInput;
-import globalwaves.fileio.input.command.player.BackwardCommandInput;
-import globalwaves.fileio.input.command.player.ForwardCommandInput;
-import globalwaves.fileio.input.command.player.LikeCommandInput;
-import globalwaves.fileio.input.command.player.LoadCommandInput;
-import globalwaves.fileio.input.command.player.NextCommandInput;
-import globalwaves.fileio.input.command.player.PlayPauseCommandInput;
-import globalwaves.fileio.input.command.player.PrevCommandInput;
-import globalwaves.fileio.input.command.player.RepeatCommandInput;
-import globalwaves.fileio.input.command.player.ShuffleCommandInput;
-import globalwaves.fileio.input.command.player.StatusCommandInput;
-import globalwaves.fileio.input.command.playlist.CreatePlaylistCommandInput;
-import globalwaves.fileio.input.command.playlist.FollowPlaylistCommandInput;
-import globalwaves.fileio.input.command.playlist.ShowPlaylistsCommandInput;
-import globalwaves.fileio.input.command.playlist.SwitchVisibilityCommandInput;
 import globalwaves.fileio.input.command.searchbar.SearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SelectCommandInput;
 import globalwaves.fileio.input.command.searchbar.filter.PlaylistSearchCommandFilter;
 import globalwaves.fileio.input.command.searchbar.filter.PodcastSearchCommandFilter;
 import globalwaves.fileio.input.command.searchbar.filter.SongSearchCommandFilter;
-import globalwaves.fileio.input.command.users.ShowPreferredSongsCommandInput;
 import globalwaves.fileio.input.library.LibraryInput;
 import globalwaves.fileio.input.library.PodcastInput;
 import globalwaves.fileio.input.library.SongInput;
-import globalwaves.fileio.input.library.UserInput;
 import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.fileio.output.command.ResultsCommandOutput;
-import globalwaves.visitor.command.CommandVisitor;
+import globalwaves.visitor.command.SearchBarCommandVisitor;
 
-public class Player implements CommandVisitor {
+public class SearchBarComponent implements SearchBarCommandVisitor {
     private LibraryInput libraryInput;
     private Map<String, User> users;
-    private ArrayList<Playlist> playlists;
 
-    public Player() {
-        libraryInput = null;
-        users = new HashMap<>();
-    }
-
-    public void loadLibrary(LibraryInput libraryInput) {
-        if (!users.isEmpty())
-            return;
-
+    public SearchBarComponent(LibraryInput libraryInput, Map<String, User> users) {
         this.libraryInput = libraryInput;
-
-        for (UserInput user : libraryInput.getUsers())
-            users.put(user.getUsername(), new User());
+        this.users = users;
     }
 
     private void searchSong(SearchCommandInput command, User currentUser) {
@@ -155,7 +124,7 @@ public class Player implements CommandVisitor {
         }
     }
 
-    public void playlistSearch(SearchCommandInput command, User currentUser) {
+    private void playlistSearch(SearchCommandInput command, User currentUser) {
         PlaylistSearchCommandFilter playlistFilter = (PlaylistSearchCommandFilter) command.getFilters();
 
         String nameFilter = playlistFilter.getName();
@@ -223,124 +192,5 @@ public class Player implements CommandVisitor {
 
         return new CommandOutput(command,
                 "Successfully selected " + currentUser.getCurrentSong().getName() + ".");
-    }
-
-    @Override
-    public CommandOutput visit(LoadCommandInput command) {
-        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
-            return new CommandOutput(command, "User not found");
-        }
-
-        try {
-            User currentUser = users.get(command.getUsername());
-
-            currentUser.loadCurrentSong(command.getTimestamp());
-        } catch (RuntimeException e) {
-            return new CommandOutput(command, e.getMessage());
-        }
-
-        return new CommandOutput(command, "Playback loaded successfully.");
-    }
-
-    @Override
-    public CommandOutput visit(PlayPauseCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(RepeatCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(ShuffleCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(ForwardCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(BackwardCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(LikeCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(NextCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(PrevCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(AddRemoveInPlaylistCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(StatusCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(CreatePlaylistCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(SwitchVisibilityCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(FollowPlaylistCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(ShowPlaylistsCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(ShowPreferredSongsCommandInput visitor) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(GetTop5SongsCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public CommandOutput visit(GetTop5PlaylistsCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

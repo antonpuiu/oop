@@ -4,7 +4,7 @@ import globalwaves.checker.Checker;
 import globalwaves.checker.CheckerConstants;
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.input.library.LibraryInput;
-import globalwaves.player.Player;
+import globalwaves.player.MusicPlayer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -23,7 +23,7 @@ import java.util.Objects;
  */
 public final class Main {
     static final String LIBRARY_PATH = CheckerConstants.TESTS_PATH + "library/library.json";
-    private static Player player = new Player();
+    private static MusicPlayer player = new MusicPlayer();
 
     /**
      * for coding style
