@@ -1,4 +1,4 @@
-package globalwaves.player;
+package globalwaves.player.components;
 
 import globalwaves.fileio.input.command.playlist.CreatePlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.FollowPlaylistCommandInput;
@@ -14,25 +14,21 @@ public class PlaylistComponent implements PlaylistCommandVisitor {
 
     @Override
     public CommandOutput visit(CreatePlaylistCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(SwitchVisibilityCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(FollowPlaylistCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(ShowPlaylistsCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

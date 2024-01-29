@@ -19,7 +19,7 @@ public final class EpisodeInput implements AudioFile {
         this.name = name;
     }
 
-    public Integer getDuration() {
+    public int getDuration() {
         return duration;
     }
 

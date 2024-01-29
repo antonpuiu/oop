@@ -1,4 +1,4 @@
-package globalwaves.player;
+package globalwaves.player.components;
 
 import java.util.Map;
 
@@ -14,6 +14,10 @@ import globalwaves.fileio.input.command.player.RepeatCommandInput;
 import globalwaves.fileio.input.command.player.ShuffleCommandInput;
 import globalwaves.fileio.input.command.player.StatusCommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
+import globalwaves.fileio.output.command.player.PlayerCommandOutput;
+import globalwaves.fileio.output.command.player.StatusCommandOutput;
+import globalwaves.player.MusicPlayerState;
+import globalwaves.player.User;
 import globalwaves.visitor.command.PlayerCommandVisitor;
 
 public class PlayerComponent implements PlayerCommandVisitor {
@@ -26,7 +30,7 @@ public class PlayerComponent implements PlayerCommandVisitor {
     @Override
     public CommandOutput visit(LoadCommandInput command) {
         if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
-            return new CommandOutput(command, "User not found");
+            return new PlayerCommandOutput(command, "User not found");
         }
 
         try {
@@ -34,69 +38,79 @@ public class PlayerComponent implements PlayerCommandVisitor {
 
             currentUser.loadCurrentSong(command.getTimestamp());
         } catch (RuntimeException e) {
-            return new CommandOutput(command, e.getMessage());
+            return new PlayerCommandOutput(command, e.getMessage());
         }
 
-        return new CommandOutput(command, "Playback loaded successfully.");
+        return new PlayerCommandOutput(command, "Playback loaded successfully.");
     }
 
     @Override
     public CommandOutput visit(PlayPauseCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
+        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
+            return new PlayerCommandOutput(command, "User not found");
+        }
+
+        try {
+            User currentUser = users.get(command.getUsername());
+
+            if (currentUser.playPause(command.getTimestamp())) {
+                return new PlayerCommandOutput(command, "Playback resumed successfully.");
+            } else {
+                return new PlayerCommandOutput(command, "Playback paused successfully.");
+            }
+        } catch (RuntimeException e) {
+            return new PlayerCommandOutput(command, e.getMessage());
+        }
     }
 
     @Override
     public CommandOutput visit(RepeatCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(ShuffleCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(ForwardCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(BackwardCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(LikeCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(NextCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(PrevCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(AddRemoveInPlaylistCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(StatusCommandInput command) {
-        // TODO Auto-generated method stub
-        return null;
+        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
+            return new PlayerCommandOutput(command, "User not found");
+        }
+
+        User currentUser = users.get(command.getUsername());
+
+        return new StatusCommandOutput(command, currentUser.getMusicPlayerState(command.getTimestamp()));
     }
 }

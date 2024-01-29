@@ -9,13 +9,21 @@ public class User {
     private UserState state;
     private ArrayList<AudioFile> searchResults;
     private AudioFile currentAudioFile;
-    private int loadTimestamp;
+
+    private int startTimestamp;
+    private int remainedTime;
+    private String repeat;
+    private boolean shuffle;
+    private boolean paused;
 
     public User() {
         state = UserState.INITIAL;
         searchResults = new ArrayList<>();
         currentAudioFile = null;
-        loadTimestamp = 0;
+        remainedTime = 0;
+        repeat = "No Repeat";
+        shuffle = false;
+        paused = false;
     }
 
     public void addSearchResult(AudioFile song) {
@@ -40,10 +48,6 @@ public class User {
         state = UserState.AUDIOFILE_SELECTED;
     }
 
-    public AudioFile getCurrentSong() {
-        return currentAudioFile;
-    }
-
     public ArrayList<String> getSearchResults() {
         ArrayList<String> result = new ArrayList<>();
 
@@ -56,6 +60,10 @@ public class User {
         }
 
         return result;
+    }
+
+    public AudioFile getCurrentSong() {
+        return currentAudioFile;
     }
 
     public void loadCurrentSong(int loadTimestamp) {
@@ -71,8 +79,9 @@ public class User {
             }
         }
 
-        this.loadTimestamp = loadTimestamp;
         state = UserState.AUDIOFILE_LOADED;
+        startTimestamp = loadTimestamp;
+        remainedTime = currentAudioFile.getDuration();
     }
 
     public UserState getState() {
@@ -83,10 +92,63 @@ public class User {
         state = UserState.INITIAL;
         searchResults.clear();
         currentAudioFile = null;
-        loadTimestamp = 0;
+        remainedTime = 0;
     }
 
-    enum UserState {
+    private void pausePlayback(int timestamp) {
+        paused = true;
+        remainedTime -= (timestamp - startTimestamp);
+        startTimestamp = 0;
+    }
+
+    private void startPlayback(int timestamp) {
+        paused = false;
+        startTimestamp = timestamp;
+    }
+
+    public boolean playPause(int timestamp) {
+        if (!state.equals(UserState.AUDIOFILE_LOADED)) {
+            throw new RuntimeException("Please load a source before attempting to pause or resume playback.");
+        }
+
+        if (paused) {
+            startPlayback(timestamp);
+
+            return true;
+        } else {
+            pausePlayback(timestamp);
+
+            return false;
+        }
+    }
+
+    public MusicPlayerState getMusicPlayerState(int timestamp) {
+        int elapsed;
+        String name;
+
+        if (paused) {
+            elapsed = remainedTime;
+        } else {
+            elapsed = remainedTime - (timestamp - startTimestamp);
+        }
+
+        if (elapsed < 0) {
+            currentAudioFile = null;
+            elapsed = 0;
+            paused = true;
+        }
+
+        name = currentAudioFile == null ? "" : currentAudioFile.getName();
+
+        return new MusicPlayerState(
+                name,
+                elapsed,
+                repeat,
+                shuffle,
+                paused);
+    }
+
+    public enum UserState {
         INITIAL,
         SEARCH_PERFORMED,
         AUDIOFILE_SELECTED,

@@ -5,6 +5,10 @@ import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.visitor.command.CommandVisitor;
 
 public final class BackwardCommandInput extends CommandInput {
+    public BackwardCommandInput() {
+        super("backward");
+    }
+
     @Override
     public CommandOutput accept(final CommandVisitor visitor) {
         return visitor.visit(this);

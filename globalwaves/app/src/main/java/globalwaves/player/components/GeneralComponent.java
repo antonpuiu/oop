@@ -1,4 +1,4 @@
-package globalwaves.player;
+package globalwaves.player.components;
 
 import globalwaves.fileio.input.command.general.GetTop5PlaylistsCommandInput;
 import globalwaves.fileio.input.command.general.GetTop5SongsCommandInput;
@@ -12,13 +12,11 @@ public class GeneralComponent implements GeneralCommandVisitor {
 
     @Override
     public CommandOutput visit(GetTop5SongsCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CommandOutput visit(GetTop5PlaylistsCommandInput command) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

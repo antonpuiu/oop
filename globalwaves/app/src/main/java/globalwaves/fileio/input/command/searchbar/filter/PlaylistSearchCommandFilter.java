@@ -1,7 +1,5 @@
 package globalwaves.fileio.input.command.searchbar.filter;
 
-import globalwaves.visitor.filter.FilterVisitor;
-
 public final class PlaylistSearchCommandFilter extends SearchCommandFilter {
     private String owner;
 

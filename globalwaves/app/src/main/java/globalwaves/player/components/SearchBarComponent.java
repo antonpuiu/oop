@@ -1,4 +1,4 @@
-package globalwaves.player;
+package globalwaves.player.components;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,9 @@ import globalwaves.fileio.input.library.LibraryInput;
 import globalwaves.fileio.input.library.PodcastInput;
 import globalwaves.fileio.input.library.SongInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.fileio.output.command.ResultsCommandOutput;
+import globalwaves.fileio.output.command.searchbar.SearchCommandOutput;
+import globalwaves.fileio.output.command.searchbar.SelectCommandOutput;
+import globalwaves.player.User;
 import globalwaves.visitor.command.SearchBarCommandVisitor;
 
 public class SearchBarComponent implements SearchBarCommandVisitor {
@@ -141,12 +143,12 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
     }
 
     @Override
-    public ResultsCommandOutput visit(SearchCommandInput command) {
+    public SearchCommandOutput visit(SearchCommandInput command) {
         User currentUser;
         ArrayList<String> searchResult;
 
         if (!users.containsKey(command.getUsername())) {
-            return new ResultsCommandOutput(command, "User not found");
+            return new SearchCommandOutput(command, "User not found");
         }
 
         currentUser = users.get(command.getUsername());
@@ -169,7 +171,7 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
         currentUser.finishSearch();
         searchResult = currentUser.getSearchResults();
 
-        return new ResultsCommandOutput(command,
+        return new SearchCommandOutput(command,
                 "Search returned " + searchResult.size() + " results",
                 searchResult);
     }
@@ -179,7 +181,7 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
         User currentUser;
 
         if (!users.containsKey(command.getUsername())) {
-            return new CommandOutput(command, "User not found");
+            return new SelectCommandOutput(command, "User not found");
         }
 
         currentUser = users.get(command.getUsername());
@@ -187,10 +189,10 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
         try {
             currentUser.selectSearchResult(command.getItemNumber() - 1);
         } catch (RuntimeException e) {
-            return new CommandOutput(command, e.getMessage());
+            return new SelectCommandOutput(command, e.getMessage());
         }
 
-        return new CommandOutput(command,
+        return new SelectCommandOutput(command,
                 "Successfully selected " + currentUser.getCurrentSong().getName() + ".");
     }
 }

@@ -2,7 +2,6 @@ package globalwaves.fileio.input.command.searchbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

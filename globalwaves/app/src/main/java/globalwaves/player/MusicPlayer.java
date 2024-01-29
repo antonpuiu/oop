@@ -26,7 +26,12 @@ import globalwaves.fileio.input.command.users.ShowPreferredSongsCommandInput;
 import globalwaves.fileio.input.library.LibraryInput;
 import globalwaves.fileio.input.library.UserInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.fileio.output.command.ResultsCommandOutput;
+import globalwaves.fileio.output.command.searchbar.SearchCommandOutput;
+import globalwaves.player.components.GeneralComponent;
+import globalwaves.player.components.PlayerComponent;
+import globalwaves.player.components.PlaylistComponent;
+import globalwaves.player.components.SearchBarComponent;
+import globalwaves.player.components.UsersComponent;
 import globalwaves.visitor.command.CommandVisitor;
 
 public class MusicPlayer implements CommandVisitor {
@@ -57,7 +62,7 @@ public class MusicPlayer implements CommandVisitor {
     }
 
     @Override
-    public ResultsCommandOutput visit(SearchCommandInput command) {
+    public SearchCommandOutput visit(SearchCommandInput command) {
         return searchBarComponent.visit(command);
     }
 

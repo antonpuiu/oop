@@ -26,7 +26,7 @@ public final class SongInput implements AudioFile {
         this.name = name;
     }
 
-    public Integer getDuration() {
+    public int getDuration() {
         return duration;
     }
 
