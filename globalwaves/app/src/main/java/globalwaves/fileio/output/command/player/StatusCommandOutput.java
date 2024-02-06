@@ -7,9 +7,7 @@ import globalwaves.player.MusicPlayerState;
 public class StatusCommandOutput extends CommandOutput {
     private MusicPlayerState stats;
 
-    public StatusCommandOutput(
-            CommandInput inputCommand,
-            MusicPlayerState stats) {
+    public StatusCommandOutput(CommandInput inputCommand, MusicPlayerState stats) {
         super(inputCommand);
 
         this.stats = stats;

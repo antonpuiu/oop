@@ -1,6 +1,6 @@
 package globalwaves.fileio.input.library;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import globalwaves.entity.AudioFile;
 
@@ -8,7 +8,7 @@ public final class SongInput implements AudioFile {
     private String name;
     private Integer duration;
     private String album;
-    private ArrayList<String> tags;
+    private List<String> tags;
     private String lyrics;
     private String genre;
     private Integer releaseYear;
@@ -42,11 +42,11 @@ public final class SongInput implements AudioFile {
         this.album = album;
     }
 
-    public ArrayList<String> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(final ArrayList<String> tags) {
+    public void setTags(final List<String> tags) {
         this.tags = tags;
     }
 
@@ -92,5 +92,10 @@ public final class SongInput implements AudioFile {
     @Override
     public boolean isCollection() {
         return false;
+    }
+
+    @Override
+    public boolean isSong() {
+        return true;
     }
 }

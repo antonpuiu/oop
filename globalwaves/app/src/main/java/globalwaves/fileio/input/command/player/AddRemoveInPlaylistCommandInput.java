@@ -5,10 +5,6 @@ import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.visitor.command.CommandVisitor;
 
 public final class AddRemoveInPlaylistCommandInput extends CommandInput {
-    public AddRemoveInPlaylistCommandInput() {
-        super("addRemoveInPlaylist");
-    }
-
     private int playlistId;
 
     public int getPlaylistId() {

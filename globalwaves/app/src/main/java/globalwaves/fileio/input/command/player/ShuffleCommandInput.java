@@ -5,10 +5,6 @@ import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.visitor.command.CommandVisitor;
 
 public final class ShuffleCommandInput extends CommandInput {
-    public ShuffleCommandInput() {
-        super("shuffle");
-    }
-
     private int seed;
 
     public int getSeed() {

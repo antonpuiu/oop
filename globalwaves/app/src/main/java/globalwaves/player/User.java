@@ -1,14 +1,23 @@
 package globalwaves.player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import globalwaves.entity.AudioCollection;
 import globalwaves.entity.AudioFile;
+import globalwaves.entity.Playlist;
+import globalwaves.fileio.input.library.PodcastInput;
+import globalwaves.fileio.input.library.SongInput;
+import globalwaves.fileio.output.command.player.LoadCommandOutput;
+import globalwaves.fileio.output.command.player.PlayPauseCommandOutput;
+import globalwaves.fileio.output.command.searchbar.SelectCommandOutput;
 
 public class User {
     private UserState state;
-    private ArrayList<AudioFile> searchResults;
     private AudioFile currentAudioFile;
+
+    private ArrayList<AudioFile> searchResults;
+    private ArrayList<Playlist> playlists;
 
     private int startTimestamp;
     private int remainedTime;
@@ -18,8 +27,12 @@ public class User {
 
     public User() {
         state = UserState.INITIAL;
-        searchResults = new ArrayList<>();
         currentAudioFile = null;
+
+        searchResults = new ArrayList<>();
+        playlists = new ArrayList<>();
+
+        startTimestamp = 0;
         remainedTime = 0;
         repeat = "No Repeat";
         shuffle = false;
@@ -30,22 +43,56 @@ public class User {
         searchResults.add(song);
     }
 
+    public void setSongSearchResult(List<SongInput> searchResults) {
+        this.searchResults.clear();
+        this.searchResults.addAll(searchResults);
+        state = UserState.SEARCH_PERFORMED;
+    }
+
+    public void setPodcastSearchResult(List<PodcastInput> searchResults) {
+        this.searchResults.clear();
+        this.searchResults.addAll(searchResults);
+        state = UserState.SEARCH_PERFORMED;
+    }
+
+    public void setPlaylistSearchResult(List<Playlist> searchResults) {
+        this.searchResults.clear();
+        this.searchResults.addAll(searchResults);
+        state = UserState.SEARCH_PERFORMED;
+    }
+
+    public void setSearchResult(List<AudioFile> searchResults) {
+        this.searchResults.clear();
+        this.searchResults.addAll(searchResults);
+        state = UserState.SEARCH_PERFORMED;
+    }
+
     public void finishSearch() {
         state = UserState.SEARCH_PERFORMED;
     }
 
-    public void selectSearchResult(int index) {
+    public ArrayList<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public SelectCommandOutput.Result selectSearchResult(int index) {
         if (!state.equals(UserState.SEARCH_PERFORMED)) {
-            throw new RuntimeException("Please conduct a search before making a selection.");
+            return SelectCommandOutput.Result.NO_SEARCH;
         }
 
-        if (index > searchResults.size()) {
-            throw new RuntimeException("The selected ID is too high.");
+        if (index >= searchResults.size()) {
+            return SelectCommandOutput.Result.OUT_OF_BOUNDS;
         }
 
         currentAudioFile = searchResults.get(index);
         searchResults.clear();
         state = UserState.AUDIOFILE_SELECTED;
+
+        if (currentAudioFile.isCollection()) {
+            ((AudioCollection) currentAudioFile).setCurrentAudioFile(0);
+        }
+
+        return SelectCommandOutput.Result.SUCCESS;
     }
 
     public ArrayList<String> getSearchResults() {
@@ -62,26 +109,29 @@ public class User {
         return result;
     }
 
-    public AudioFile getCurrentSong() {
+    public AudioFile getCurrentAudioFile() {
         return currentAudioFile;
     }
 
-    public void loadCurrentSong(int loadTimestamp) {
+    public LoadCommandOutput.Result loadCurrentSong(int loadTimestamp) {
         if (currentAudioFile == null || !state.equals(UserState.AUDIOFILE_SELECTED)) {
-            throw new RuntimeException("Please select a source before attempting to load.");
+            return LoadCommandOutput.Result.NO_SOURCE;
         }
 
         if (currentAudioFile.isCollection()) {
             AudioCollection collection = (AudioCollection) currentAudioFile;
 
             if (collection.getSize() <= 0) {
-                throw new RuntimeException("You can't load an empty audio collection!");
+                return LoadCommandOutput.Result.EMPTY_COLLECTION;
             }
         }
 
         state = UserState.AUDIOFILE_LOADED;
+        paused = false;
         startTimestamp = loadTimestamp;
         remainedTime = currentAudioFile.getDuration();
+
+        return LoadCommandOutput.Result.SUCCESS;
     }
 
     public UserState getState() {
@@ -106,19 +156,19 @@ public class User {
         startTimestamp = timestamp;
     }
 
-    public boolean playPause(int timestamp) {
+    public PlayPauseCommandOutput.Result playPause(int timestamp) {
         if (!state.equals(UserState.AUDIOFILE_LOADED)) {
-            throw new RuntimeException("Please load a source before attempting to pause or resume playback.");
+            return PlayPauseCommandOutput.Result.NO_SOURCE;
         }
 
         if (paused) {
             startPlayback(timestamp);
 
-            return true;
+            return PlayPauseCommandOutput.Result.RESUME;
         } else {
             pausePlayback(timestamp);
 
-            return false;
+            return PlayPauseCommandOutput.Result.PAUSE;
         }
     }
 

@@ -1,7 +1,10 @@
 package globalwaves.player.components;
 
+import java.util.ArrayList;
 import java.util.Map;
 
+import globalwaves.entity.AudioFile;
+import globalwaves.entity.Playlist;
 import globalwaves.fileio.input.command.player.AddRemoveInPlaylistCommandInput;
 import globalwaves.fileio.input.command.player.BackwardCommandInput;
 import globalwaves.fileio.input.command.player.ForwardCommandInput;
@@ -13,10 +16,12 @@ import globalwaves.fileio.input.command.player.PrevCommandInput;
 import globalwaves.fileio.input.command.player.RepeatCommandInput;
 import globalwaves.fileio.input.command.player.ShuffleCommandInput;
 import globalwaves.fileio.input.command.player.StatusCommandInput;
+import globalwaves.fileio.input.library.SongInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.fileio.output.command.player.PlayerCommandOutput;
+import globalwaves.fileio.output.command.player.AddRemoveInPlaylistCommandOutput;
+import globalwaves.fileio.output.command.player.LoadCommandOutput;
+import globalwaves.fileio.output.command.player.PlayPauseCommandOutput;
 import globalwaves.fileio.output.command.player.StatusCommandOutput;
-import globalwaves.player.MusicPlayerState;
 import globalwaves.player.User;
 import globalwaves.visitor.command.PlayerCommandVisitor;
 
@@ -29,38 +34,18 @@ public class PlayerComponent implements PlayerCommandVisitor {
 
     @Override
     public CommandOutput visit(LoadCommandInput command) {
-        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
-            return new PlayerCommandOutput(command, "User not found");
-        }
+        User currentUser = users.get(command.getUsername());
+        LoadCommandOutput.Result result = currentUser.loadCurrentSong(command.getTimestamp());
 
-        try {
-            User currentUser = users.get(command.getUsername());
-
-            currentUser.loadCurrentSong(command.getTimestamp());
-        } catch (RuntimeException e) {
-            return new PlayerCommandOutput(command, e.getMessage());
-        }
-
-        return new PlayerCommandOutput(command, "Playback loaded successfully.");
+        return new LoadCommandOutput(command, result);
     }
 
     @Override
     public CommandOutput visit(PlayPauseCommandInput command) {
-        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
-            return new PlayerCommandOutput(command, "User not found");
-        }
+        User currentUser = users.get(command.getUsername());
+        PlayPauseCommandOutput.Result result = currentUser.playPause(command.getTimestamp());
 
-        try {
-            User currentUser = users.get(command.getUsername());
-
-            if (currentUser.playPause(command.getTimestamp())) {
-                return new PlayerCommandOutput(command, "Playback resumed successfully.");
-            } else {
-                return new PlayerCommandOutput(command, "Playback paused successfully.");
-            }
-        } catch (RuntimeException e) {
-            return new PlayerCommandOutput(command, e.getMessage());
-        }
+        return new PlayPauseCommandOutput(command, result);
     }
 
     @Override
@@ -100,15 +85,41 @@ public class PlayerComponent implements PlayerCommandVisitor {
 
     @Override
     public CommandOutput visit(AddRemoveInPlaylistCommandInput command) {
-        return null;
+        User currentUser = users.get(command.getUsername());
+        ArrayList<Playlist> userPlaylists = currentUser.getPlaylists();
+        int playlistId = command.getPlaylistId() - 1;
+
+        if (!currentUser.getState().equals(User.UserState.AUDIOFILE_LOADED)) {
+            return new AddRemoveInPlaylistCommandOutput(command,
+                    AddRemoveInPlaylistCommandOutput.Result.NO_SOURCE);
+        }
+
+        if (!currentUser.getCurrentAudioFile().isSong()) {
+            return new AddRemoveInPlaylistCommandOutput(command,
+                    AddRemoveInPlaylistCommandOutput.Result.SOURCE_NO_SONG);
+        }
+
+        if (playlistId >= userPlaylists.size()) {
+            return new AddRemoveInPlaylistCommandOutput(command,
+                    AddRemoveInPlaylistCommandOutput.Result.NO_PLAYLIST);
+        }
+
+        Playlist currentPlaylist = userPlaylists.get(playlistId);
+        SongInput currentSong = (SongInput) currentUser.getCurrentAudioFile();
+
+        if (currentPlaylist.containsSong(currentSong)) {
+            currentPlaylist.removeSong(currentSong);
+            return new AddRemoveInPlaylistCommandOutput(command,
+                    AddRemoveInPlaylistCommandOutput.Result.REMOVE);
+        }
+
+        currentPlaylist.addSong(currentSong);
+        return new AddRemoveInPlaylistCommandOutput(command,
+                AddRemoveInPlaylistCommandOutput.Result.ADD);
     }
 
     @Override
     public CommandOutput visit(StatusCommandInput command) {
-        if (!users.containsKey(command.getUsername()) || command.getUsername() == null) {
-            return new PlayerCommandOutput(command, "User not found");
-        }
-
         User currentUser = users.get(command.getUsername());
 
         return new StatusCommandOutput(command, currentUser.getMusicPlayerState(command.getTimestamp()));

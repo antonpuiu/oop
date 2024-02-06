@@ -2,7 +2,7 @@ package globalwaves.fileio.output.command;
 
 import globalwaves.fileio.input.command.CommandInput;
 
-public class CommandOutput {
+public abstract class CommandOutput {
     private String command;
     private String user;
     private int timestamp;

@@ -14,13 +14,7 @@ public abstract class AudioCollection implements AudioFile {
     }
 
     public void setCurrentAudioFile(int index) {
-        List<AudioFile> audioFiles = getAudioFiles();
-
-        if (index > audioFiles.size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        currentAudioFile = audioFiles.get(index);
+        currentAudioFile = getAudioFiles().get(index);
     }
 
     @Override
@@ -30,8 +24,9 @@ public abstract class AudioCollection implements AudioFile {
 
     @Override
     public int getDuration() {
-        if (currentAudioFile == null)
+        if (currentAudioFile == null) {
             return -1;
+        }
 
         return currentAudioFile.getDuration();
     }

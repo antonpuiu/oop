@@ -1,31 +1,27 @@
 package globalwaves.fileio.input.command.searchbar.filter;
 
-public final class PodcastSearchCommandFilter extends SearchCommandFilter {
+public final class PodcastSearchCommandFilter {
+    private String name;
     private String owner;
 
-    public PodcastSearchCommandFilter() {
-        this(null, null);
+    public PodcastSearchCommandFilter(SearchCommandFilter filter) {
+        name = filter.getName();
+        owner = filter.getOwner();
     }
 
-    public PodcastSearchCommandFilter(final String owner) {
-        this.owner = owner;
+    public String getName() {
+        return name;
     }
 
-    public PodcastSearchCommandFilter(final String name, final String owner) {
-        super(name);
-        this.owner = owner;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getOwner() {
         return owner;
     }
 
-    public void setOwner(final String owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "PodcastSearchCommandFilter [owner=" + owner + "]";
     }
 }

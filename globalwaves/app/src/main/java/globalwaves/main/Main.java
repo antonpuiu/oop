@@ -52,8 +52,7 @@ public final class Main {
         Files.createDirectories(path);
 
         for (File file : Objects.requireNonNull(directory.listFiles())) {
-            if (file.getName().startsWith("library") ||
-                    !file.getName().contains("test02")) {
+            if (file.getName().startsWith("library")) {
                 continue;
             }
 

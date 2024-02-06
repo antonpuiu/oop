@@ -57,4 +57,9 @@ public final class LibraryInput extends AudioCollection {
     public List<AudioFile> getAudioFiles() {
         return null;
     }
+
+    @Override
+    public boolean isSong() {
+        return false;
+    }
 }

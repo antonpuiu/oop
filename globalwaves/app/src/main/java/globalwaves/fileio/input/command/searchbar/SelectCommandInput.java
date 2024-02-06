@@ -7,10 +7,6 @@ import globalwaves.visitor.command.CommandVisitor;
 public final class SelectCommandInput extends CommandInput {
     private int itemNumber;
 
-    public SelectCommandInput() {
-        super("select");
-    }
-
     public int getItemNumber() {
         return itemNumber;
     }
@@ -22,5 +18,10 @@ public final class SelectCommandInput extends CommandInput {
     @Override
     public CommandOutput accept(final CommandVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "SelectCommandInput [itemNumber=" + itemNumber + "]";
     }
 }

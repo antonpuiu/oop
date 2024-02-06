@@ -2,7 +2,8 @@ package globalwaves.fileio.input.command.searchbar.filter;
 
 import java.util.ArrayList;
 
-public final class SongSearchCommandFilter extends SearchCommandFilter {
+public final class SongSearchCommandFilter {
+    private String name;
     private String album;
     private ArrayList<String> tags;
     private String lyrics;
@@ -10,20 +11,22 @@ public final class SongSearchCommandFilter extends SearchCommandFilter {
     private String releaseYear;
     private String artist;
 
-    public SongSearchCommandFilter() {
+    public SongSearchCommandFilter(SearchCommandFilter filter) {
+        name = filter.getName();
+        album = filter.getAlbum();
+        tags = filter.getTags();
+        lyrics = filter.getLyrics();
+        genre = filter.getGenre();
+        releaseYear = filter.getReleaseYear();
+        artist = filter.getArtist();
     }
 
-    public SongSearchCommandFilter(final String name, final String album,
-            final ArrayList<String> tags, final String lyrics, final String genre,
-            final String releaseYear, final String artist) {
-        super(name);
+    public String getName() {
+        return name;
+    }
 
-        this.album = album;
-        this.tags = tags;
-        this.lyrics = lyrics;
-        this.genre = genre;
-        this.releaseYear = releaseYear;
-        this.artist = artist;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAlbum() {
@@ -73,12 +76,4 @@ public final class SongSearchCommandFilter extends SearchCommandFilter {
     public void setArtist(final String artist) {
         this.artist = artist;
     }
-
-    @Override
-    public String toString() {
-        return super.toString() + "SongSearchCommandFilter [album=" + album + ", tags=" + tags + ", lyrics=" + lyrics
-                + ", genre=" + genre
-                + ", releaseYear=" + releaseYear + ", artist=" + artist + "]";
-    }
-
 }

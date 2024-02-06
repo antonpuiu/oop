@@ -1,12 +1,17 @@
 package globalwaves.player.components;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import globalwaves.entity.Playlist;
+import globalwaves.fileio.input.command.searchbar.PlaylistSearchCommandInput;
+import globalwaves.fileio.input.command.searchbar.PodcastSearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SelectCommandInput;
+import globalwaves.fileio.input.command.searchbar.SongSearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.filter.PlaylistSearchCommandFilter;
 import globalwaves.fileio.input.command.searchbar.filter.PodcastSearchCommandFilter;
 import globalwaves.fileio.input.command.searchbar.filter.SongSearchCommandFilter;
@@ -22,14 +27,18 @@ import globalwaves.visitor.command.SearchBarCommandVisitor;
 public class SearchBarComponent implements SearchBarCommandVisitor {
     private LibraryInput libraryInput;
     private Map<String, User> users;
+    private List<Playlist> playlists;
 
-    public SearchBarComponent(LibraryInput libraryInput, Map<String, User> users) {
+    public SearchBarComponent(LibraryInput libraryInput, Map<String, User> users, List<Playlist> playlists) {
         this.libraryInput = libraryInput;
         this.users = users;
+        this.playlists = playlists;
     }
 
-    private void searchSong(SearchCommandInput command, User currentUser) {
-        SongSearchCommandFilter songFilter = (SongSearchCommandFilter) command.getFilters();
+    private void searchSong(SongSearchCommandInput command, User currentUser) {
+        SongSearchCommandFilter songFilter = command.getSongFilter();
+        List<SongInput> audioFiles = libraryInput.getSongs();
+        ArrayList<Predicate<SongInput>> predicates = new ArrayList<>();
 
         String nameFilter = songFilter.getName();
         String albumFilter = songFilter.getAlbum();
@@ -39,160 +48,190 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
         String releaseYearFilter = songFilter.getReleaseYear();
         String artistFilter = songFilter.getArtist();
 
-        Map<String, Function<SongInput, String>> map = new HashMap<>() {
-            {
-                put(albumFilter, SongInput::getAlbum);
-                put(artistFilter, SongInput::getArtist);
+        if (nameFilter != null) {
+            predicates.add(song -> (song.getName().toLowerCase().startsWith(nameFilter.toLowerCase())));
+        }
+
+        if (albumFilter != null) {
+            predicates.add(song -> (song.getAlbum().toLowerCase().equals(albumFilter.toLowerCase())));
+        }
+
+        if (tagsFilter != null) {
+            for (String tag : tagsFilter) {
+                predicates.add(song -> {
+                    song.setTags(song.getTags().stream().map(String::toLowerCase).toList());
+
+                    return song.getTags().contains(tag.toLowerCase());
+                });
             }
-        };
+        }
 
-        for (SongInput song : libraryInput.getSongs()) {
-            boolean passed = true;
+        if (lyricsFilter != null) {
+            predicates.add(song -> (song.getLyrics().toLowerCase().contains(lyricsFilter.toLowerCase())));
+        }
 
-            for (String key : map.keySet()) {
-                if (key == null) {
-                    continue;
-                }
+        if (genreFilter != null) {
+            predicates.add(song -> (song.getGenre().toLowerCase().equals(genreFilter.toLowerCase())));
+        }
 
-                String mapValue = map.get(key).apply(song);
-
-                if (!mapValue.equals(key)) {
-                    passed = false;
-                    break;
-                }
-            }
-
-            if (lyricsFilter != null && passed && !song.getLyrics().contains(lyricsFilter)) {
-                passed = false;
-            }
-
-            if (nameFilter != null && passed && !song.getName().startsWith(nameFilter)) {
-                passed = false;
-            }
-
-            if (genreFilter != null && passed && !song.getGenre().toLowerCase().equals(genreFilter.toLowerCase())) {
-                passed = false;
-            }
-
-            if (releaseYearFilter != null && passed) {
+        if (releaseYearFilter != null) {
+            predicates.add(song -> {
                 boolean greater = releaseYearFilter.charAt(0) == '>';
                 int targetYear = Integer.parseInt(releaseYearFilter.substring(1));
                 int songYear = song.getReleaseYear();
 
-                if ((greater && songYear < targetYear) || (!greater && songYear > targetYear)) {
-                    passed = false;
-                }
-            }
-
-            if (tagsFilter != null && passed) {
-                for (String commandTag : tagsFilter) {
-                    boolean foundTag = false;
-
-                    for (String songTag : song.getTags()) {
-                        if (songTag.equals(commandTag)) {
-                            foundTag = true;
-                            break;
-                        }
-                    }
-
-                    if (!foundTag) {
-                        passed = false;
-                        break;
-                    }
-                }
-            }
-
-            if (!passed) {
-                continue;
-            }
-
-            currentUser.addSearchResult(song);
+                return !((greater && songYear < targetYear) || (!greater && songYear > targetYear));
+            });
         }
+
+        if (artistFilter != null) {
+            predicates.add(song -> (song.getArtist().toLowerCase().equals(artistFilter.toLowerCase())));
+        }
+
+        Stream<SongInput> audioFilesStream = audioFiles.stream();
+
+        for (var predicate : predicates) {
+            audioFilesStream = audioFilesStream.filter(predicate);
+        }
+
+        audioFiles = audioFilesStream.toList();
+        currentUser.setSongSearchResult(audioFiles);
     }
 
-    private void podcastSearch(SearchCommandInput command, User currentUser) {
-        PodcastSearchCommandFilter podcastFilter = (PodcastSearchCommandFilter) command.getFilters();
+    private void podcastSearch(PodcastSearchCommandInput command, User currentUser) {
+        PodcastSearchCommandFilter podcastFilter = command.getPodcastFilter();
+        List<PodcastInput> audioFiles = libraryInput.getPodcasts();
+        ArrayList<Predicate<PodcastInput>> predicates = new ArrayList<>();
 
         String nameFilter = podcastFilter.getName();
-        String commandOwner = podcastFilter.getOwner();
+        String ownerFilter = podcastFilter.getOwner();
 
-        for (PodcastInput podcast : libraryInput.getPodcasts()) {
-            if ((nameFilter != null && !podcast.getName().startsWith(nameFilter)) ||
-                    (commandOwner != null && !podcast.getOwner().equals(commandOwner))) {
-                continue;
-            }
-
-            currentUser.addSearchResult(podcast);
+        if (nameFilter != null) {
+            predicates.add(podcast -> (podcast.getName().toLowerCase().startsWith(nameFilter.toLowerCase())));
         }
+
+        if (ownerFilter != null) {
+            predicates.add(podcast -> (podcast.getOwner().toLowerCase().equals(ownerFilter.toLowerCase())));
+        }
+
+        Stream<PodcastInput> audioFilesStream = audioFiles.stream();
+
+        for (var predicate : predicates) {
+            audioFilesStream = audioFilesStream.filter(predicate);
+        }
+
+        audioFiles = audioFilesStream.toList();
+        currentUser.setPodcastSearchResult(audioFiles);
     }
 
-    private void playlistSearch(SearchCommandInput command, User currentUser) {
-        PlaylistSearchCommandFilter playlistFilter = (PlaylistSearchCommandFilter) command.getFilters();
+    private void playlistSearch(PlaylistSearchCommandInput command, User currentUser) {
+        PlaylistSearchCommandFilter playlistFilter = command.getPlaylistFilter();
+        List<Playlist> audioFiles = playlists;
+        ArrayList<Predicate<Playlist>> predicates = new ArrayList<>();
 
         String nameFilter = playlistFilter.getName();
-        String commandOwner = playlistFilter.getOwner();
+        String ownerFilter = playlistFilter.getOwner();
 
-        for (PodcastInput podcast : libraryInput.getPodcasts()) {
-            if ((nameFilter != null && !podcast.getName().startsWith(nameFilter)) ||
-                    (commandOwner != null && !podcast.getOwner().equals(commandOwner))) {
-                continue;
-            }
-
-            currentUser.addSearchResult(podcast);
+        if (nameFilter != null) {
+            predicates.add(podcast -> (podcast.getName().toLowerCase().startsWith(nameFilter.toLowerCase())));
         }
+
+        if (ownerFilter != null) {
+            predicates.add(podcast -> (podcast.getOwner().toLowerCase().equals(ownerFilter.toLowerCase())));
+        }
+
+        Stream<Playlist> audioFilesStream = audioFiles.stream();
+
+        for (var predicate : predicates) {
+            audioFilesStream = audioFilesStream.filter(predicate);
+        }
+
+        audioFiles = audioFilesStream.toList();
+        currentUser.setPlaylistSearchResult(audioFiles);
     }
 
     @Override
-    public SearchCommandOutput visit(SearchCommandInput command) {
+    public CommandOutput visit(SongSearchCommandInput command) {
         User currentUser;
         ArrayList<String> searchResult;
-
-        if (!users.containsKey(command.getUsername())) {
-            return new SearchCommandOutput(command, "User not found");
-        }
 
         currentUser = users.get(command.getUsername());
         if (!currentUser.getState().equals(User.UserState.INITIAL)) {
             currentUser.resetSearch();
         }
 
-        switch (command.getType()) {
-            case "song":
-                searchSong(command, currentUser);
-                break;
-            case "podcast":
-                podcastSearch(command, currentUser);
-                break;
-            case "playlist":
-                playlistSearch(command, currentUser);
-                break;
+        searchSong(command, currentUser);
+        searchResult = currentUser.getSearchResults();
+
+        return new SearchCommandOutput(command, SearchCommandOutput.Result.DEFAULT,
+                Integer.toString(searchResult.size()),
+                searchResult);
+    }
+
+    @Override
+    public CommandOutput visit(PodcastSearchCommandInput command) {
+        User currentUser;
+        ArrayList<String> searchResult;
+
+        currentUser = users.get(command.getUsername());
+        if (!currentUser.getState().equals(User.UserState.INITIAL)) {
+            currentUser.resetSearch();
         }
 
-        currentUser.finishSearch();
+        podcastSearch(command, currentUser);
         searchResult = currentUser.getSearchResults();
 
         return new SearchCommandOutput(command,
-                "Search returned " + searchResult.size() + " results",
+                SearchCommandOutput.Result.DEFAULT,
+                Integer.toString(searchResult.size()),
                 searchResult);
+    }
+
+    @Override
+    public CommandOutput visit(PlaylistSearchCommandInput command) {
+        User currentUser;
+        ArrayList<String> searchResult;
+
+        currentUser = users.get(command.getUsername());
+        if (!currentUser.getState().equals(User.UserState.INITIAL)) {
+            currentUser.resetSearch();
+        }
+
+        playlistSearch(command, currentUser);
+        searchResult = currentUser.getSearchResults();
+
+        return new SearchCommandOutput(command,
+                SearchCommandOutput.Result.DEFAULT,
+                Integer.toString(searchResult.size()),
+                searchResult);
+    }
+
+    @Override
+    public CommandOutput visit(SearchCommandInput command) {
+        switch (command.getType()) {
+            case "song":
+                return visit(new SongSearchCommandInput(command));
+            case "podcast":
+                return visit(new PodcastSearchCommandInput(command));
+            case "playlist":
+                return visit(new PlaylistSearchCommandInput(command));
+        }
+
+        return null;
     }
 
     @Override
     public CommandOutput visit(SelectCommandInput command) {
         User currentUser;
-
-        if (!users.containsKey(command.getUsername())) {
-            return new SelectCommandOutput(command, "User not found");
-        }
+        SelectCommandOutput.Result result;
 
         currentUser = users.get(command.getUsername());
+        result = currentUser.selectSearchResult(command.getItemNumber() - 1);
 
-        try {
-            currentUser.selectSearchResult(command.getItemNumber() - 1);
-        } catch (RuntimeException e) {
-            return new SelectCommandOutput(command, e.getMessage());
+        if (!result.equals(SelectCommandOutput.Result.SUCCESS)) {
+            return new SelectCommandOutput(command, result, null);
         }
 
-        return new SelectCommandOutput(command,
-                "Successfully selected " + currentUser.getCurrentSong().getName() + ".");
+        return new SelectCommandOutput(command, result, currentUser.getCurrentAudioFile().getName());
     }
 }

@@ -1,20 +1,20 @@
 package globalwaves.fileio.input.command.searchbar.filter;
 
-public final class PlaylistSearchCommandFilter extends SearchCommandFilter {
+public final class PlaylistSearchCommandFilter {
+    private String name;
     private String owner;
 
-    public PlaylistSearchCommandFilter() {
-        this(null, null);
+    public PlaylistSearchCommandFilter(SearchCommandFilter filter) {
+        name = filter.getName();
+        owner = filter.getOwner();
     }
 
-    public PlaylistSearchCommandFilter(final String owner) {
-        this(null, owner);
+    public String getName() {
+        return name;
     }
 
-    public PlaylistSearchCommandFilter(final String name, final String owner) {
-        super(name);
-
-        this.owner = owner;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getOwner() {
@@ -23,10 +23,5 @@ public final class PlaylistSearchCommandFilter extends SearchCommandFilter {
 
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "PlaylistSearchCommandFilter [owner=" + owner + "]";
     }
 }

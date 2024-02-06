@@ -6,4 +6,6 @@ public interface AudioFile {
     int getDuration();
 
     boolean isCollection();
+
+    boolean isSong();
 }

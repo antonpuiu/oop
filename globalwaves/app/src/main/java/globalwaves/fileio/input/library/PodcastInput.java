@@ -56,4 +56,9 @@ public final class PodcastInput extends AudioCollection {
     public List<AudioFile> getAudioFiles() {
         return Collections.unmodifiableList(episodes);
     }
+
+    @Override
+    public boolean isSong() {
+        return false;
+    }
 }

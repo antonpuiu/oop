@@ -44,4 +44,9 @@ public final class EpisodeInput implements AudioFile {
     public boolean isCollection() {
         return false;
     }
+
+    @Override
+    public boolean isSong() {
+        return false;
+    }
 }

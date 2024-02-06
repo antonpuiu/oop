@@ -1,8 +1,11 @@
 package globalwaves.player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import globalwaves.entity.Playlist;
 import globalwaves.fileio.input.command.general.GetTop5PlaylistsCommandInput;
 import globalwaves.fileio.input.command.general.GetTop5SongsCommandInput;
 import globalwaves.fileio.input.command.player.AddRemoveInPlaylistCommandInput;
@@ -20,13 +23,15 @@ import globalwaves.fileio.input.command.playlist.CreatePlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.FollowPlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.ShowPlaylistsCommandInput;
 import globalwaves.fileio.input.command.playlist.SwitchVisibilityCommandInput;
+import globalwaves.fileio.input.command.searchbar.PlaylistSearchCommandInput;
+import globalwaves.fileio.input.command.searchbar.PodcastSearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.SelectCommandInput;
+import globalwaves.fileio.input.command.searchbar.SongSearchCommandInput;
 import globalwaves.fileio.input.command.users.ShowPreferredSongsCommandInput;
 import globalwaves.fileio.input.library.LibraryInput;
 import globalwaves.fileio.input.library.UserInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.fileio.output.command.searchbar.SearchCommandOutput;
 import globalwaves.player.components.GeneralComponent;
 import globalwaves.player.components.PlayerComponent;
 import globalwaves.player.components.PlaylistComponent;
@@ -45,25 +50,51 @@ public class MusicPlayer implements CommandVisitor {
         searchBarComponent = null;
         playerComponent = null;
         playlistComponent = null;
+        usersComponent = null;
         generalComponent = null;
     }
 
     public void loadLibrary(LibraryInput libraryInput) {
         Map<String, User> users = new HashMap<>();
+        List<Playlist> playlists = new ArrayList<>();
 
         for (UserInput user : libraryInput.getUsers())
             users.put(user.getUsername(), new User());
 
-        searchBarComponent = new SearchBarComponent(libraryInput, users);
+        searchBarComponent = new SearchBarComponent(libraryInput, users, playlists);
         playerComponent = new PlayerComponent(users);
-        playlistComponent = new PlaylistComponent();
+        playlistComponent = new PlaylistComponent(users, playlists);
         usersComponent = new UsersComponent();
         generalComponent = new GeneralComponent();
     }
 
     @Override
-    public SearchCommandOutput visit(SearchCommandInput command) {
+    public CommandOutput visit(SongSearchCommandInput command) {
         return searchBarComponent.visit(command);
+    }
+
+    @Override
+    public CommandOutput visit(PodcastSearchCommandInput command) {
+        return searchBarComponent.visit(command);
+    }
+
+    @Override
+    public CommandOutput visit(PlaylistSearchCommandInput command) {
+        return searchBarComponent.visit(command);
+    }
+
+    @Override
+    public CommandOutput visit(SearchCommandInput command) {
+        switch (command.getType()) {
+            case "song":
+                return visit(new SongSearchCommandInput(command));
+            case "podcast":
+                return visit(new PodcastSearchCommandInput(command));
+            case "playlist":
+                return visit(new PlaylistSearchCommandInput(command));
+        }
+
+        return null;
     }
 
     @Override
