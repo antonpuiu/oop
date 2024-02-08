@@ -1,8 +1,8 @@
 package globalwaves.fileio.input.library;
 
-import globalwaves.entity.AudioFile;
+import globalwaves.entity.AudioCheckpoint;
 
-public final class EpisodeInput implements AudioFile {
+public final class EpisodeInput extends AudioCheckpoint {
     private String name;
     private Integer duration;
     private String description;
@@ -10,7 +10,6 @@ public final class EpisodeInput implements AudioFile {
     public EpisodeInput() {
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -38,15 +37,5 @@ public final class EpisodeInput implements AudioFile {
     @Override
     public String toString() {
         return "EpisodeInput [name=" + name + ", duration=" + duration + ", description=" + description + "]";
-    }
-
-    @Override
-    public boolean isCollection() {
-        return false;
-    }
-
-    @Override
-    public boolean isSong() {
-        return false;
     }
 }

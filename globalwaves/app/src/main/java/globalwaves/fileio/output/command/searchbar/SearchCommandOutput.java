@@ -1,6 +1,6 @@
 package globalwaves.fileio.output.command.searchbar;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
@@ -8,12 +8,12 @@ import globalwaves.fileio.output.command.CommandResult;
 
 public class SearchCommandOutput extends CommandOutput {
     private String message;
-    private ArrayList<String> results;
+    private List<String> results;
 
     public SearchCommandOutput(CommandInput inputCommand,
             CommandResult result,
             String arg,
-            ArrayList<String> results) {
+            List<String> results) {
         super(inputCommand);
 
         this.message = result.getResult(arg);
@@ -28,11 +28,11 @@ public class SearchCommandOutput extends CommandOutput {
         this.message = message;
     }
 
-    public ArrayList<String> getResults() {
+    public List<String> getResults() {
         return results;
     }
 
-    public void setResults(ArrayList<String> results) {
+    public void setResults(List<String> results) {
         this.results = results;
     }
 

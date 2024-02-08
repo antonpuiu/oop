@@ -1,9 +1,8 @@
 package globalwaves.player.components;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import globalwaves.entity.AudioFile;
 import globalwaves.entity.Playlist;
 import globalwaves.fileio.input.command.player.AddRemoveInPlaylistCommandInput;
 import globalwaves.fileio.input.command.player.BackwardCommandInput;
@@ -16,34 +15,114 @@ import globalwaves.fileio.input.command.player.PrevCommandInput;
 import globalwaves.fileio.input.command.player.RepeatCommandInput;
 import globalwaves.fileio.input.command.player.ShuffleCommandInput;
 import globalwaves.fileio.input.command.player.StatusCommandInput;
+import globalwaves.fileio.input.library.EpisodeInput;
+import globalwaves.fileio.input.library.PodcastInput;
 import globalwaves.fileio.input.library.SongInput;
 import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.fileio.output.command.player.AddRemoveInPlaylistCommandOutput;
 import globalwaves.fileio.output.command.player.LoadCommandOutput;
 import globalwaves.fileio.output.command.player.PlayPauseCommandOutput;
 import globalwaves.fileio.output.command.player.StatusCommandOutput;
-import globalwaves.player.User;
+import globalwaves.player.user.PlayerState;
+import globalwaves.player.user.SourceType;
+import globalwaves.player.user.UserData;
+import globalwaves.player.user.UserState;
 import globalwaves.visitor.command.PlayerCommandVisitor;
 
 public class PlayerComponent implements PlayerCommandVisitor {
-    private Map<String, User> users;
+    private Map<String, UserData> users;
 
-    public PlayerComponent(Map<String, User> users) {
+    public PlayerComponent(Map<String, UserData> users) {
         this.users = users;
+    }
+
+    private void updatePlayerState(LoadCommandInput command, UserData currentUserData, SourceType sourceType) {
+        PlayerState<?> playerState = currentUserData.getPlayerState();
+        SongInput songNowPlaying = null;
+        PodcastInput podcastNowPlaying = null;
+        EpisodeInput episodeNowPlaying = null;
+        Playlist playlistNowPlaying = null;
+
+        playerState.setPaused(false);
+        playerState.setStartTimestamp(command.getTimestamp());
+
+        switch (sourceType) {
+            case LIBRARY:
+                songNowPlaying = (SongInput) playerState.getNowPlaying();
+                playerState.setRemainedTime(songNowPlaying.getDuration());
+                break;
+            case PLAYLIST:
+                playlistNowPlaying = (Playlist) playerState.getNowPlaying();
+                songNowPlaying = playlistNowPlaying.getSong(playlistNowPlaying.getCurrentAudioFile());
+                playerState.setRemainedTime(songNowPlaying.getDuration());
+                break;
+            case PODCAST:
+                podcastNowPlaying = (PodcastInput) playerState.getNowPlaying();
+                episodeNowPlaying = podcastNowPlaying.getEpisodes().get(podcastNowPlaying.getCurrentAudioFile());
+                playerState.setRemainedTime(episodeNowPlaying.getDuration());
+                break;
+            case UNKNOWN:
+                throw new RuntimeException("[Load Command] BUG: SourceType should not be UNKNOWN at this point.");
+        }
+
+        currentUserData.setState(UserState.AUDIOFILE_LOADED);
     }
 
     @Override
     public CommandOutput visit(LoadCommandInput command) {
-        User currentUser = users.get(command.getUsername());
-        LoadCommandOutput.Result result = currentUser.loadCurrentSong(command.getTimestamp());
+        UserData currentUserData = users.get(command.getUsername());
 
-        return new LoadCommandOutput(command, result);
+        UserState userState = currentUserData.getState();
+        SourceType sourceType = currentUserData.getSourceType();
+
+        if (!userState.equals(UserState.AUDIOFILE_SELECTED)) {
+            return new LoadCommandOutput(command, LoadCommandOutput.Result.NO_SOURCE);
+        }
+
+        switch (sourceType) {
+            case PLAYLIST:
+                Playlist playlist = (Playlist) currentUserData.getNowPlaying();
+
+                if (playlist.getSize() == 0) {
+                    return new LoadCommandOutput(command, LoadCommandOutput.Result.EMPTY_COLLECTION);
+                }
+
+                break;
+            case PODCAST:
+                PodcastInput podcastInput = (PodcastInput) currentUserData.getNowPlaying();
+
+                if (podcastInput.getSize() == 0) {
+                    return new LoadCommandOutput(command, LoadCommandOutput.Result.EMPTY_COLLECTION);
+                }
+                break;
+            default:
+                break;
+        }
+
+        updatePlayerState(command, currentUserData, sourceType);
+
+        return new LoadCommandOutput(command, LoadCommandOutput.Result.SUCCESS);
     }
 
     @Override
     public CommandOutput visit(PlayPauseCommandInput command) {
-        User currentUser = users.get(command.getUsername());
-        PlayPauseCommandOutput.Result result = currentUser.playPause(command.getTimestamp());
+        UserData currentUserData = users.get(command.getUsername());
+        UserState userState = currentUserData.getState();
+        PlayerState<?> playerState = currentUserData.getPlayerState();
+        boolean paused = false;
+        PlayPauseCommandOutput.Result result;
+
+        if (!userState.equals(UserState.AUDIOFILE_LOADED)) {
+            return new PlayPauseCommandOutput(command, PlayPauseCommandOutput.Result.NO_SOURCE);
+        }
+
+        paused = playerState.playPause(command.getTimestamp());
+
+        if (paused) {
+            result = PlayPauseCommandOutput.Result.PAUSE;
+        } else {
+            result = PlayPauseCommandOutput.Result.RESUME;
+        }
 
         return new PlayPauseCommandOutput(command, result);
     }
@@ -85,16 +164,19 @@ public class PlayerComponent implements PlayerCommandVisitor {
 
     @Override
     public CommandOutput visit(AddRemoveInPlaylistCommandInput command) {
-        User currentUser = users.get(command.getUsername());
-        ArrayList<Playlist> userPlaylists = currentUser.getPlaylists();
+        UserData currentUserData = users.get(command.getUsername());
         int playlistId = command.getPlaylistId() - 1;
 
-        if (!currentUser.getState().equals(User.UserState.AUDIOFILE_LOADED)) {
+        List<Playlist> userPlaylists = currentUserData.getPlaylists();
+        UserState userState = currentUserData.getState();
+        SourceType sourceType = currentUserData.getSourceType();
+
+        if (!userState.equals(UserState.AUDIOFILE_LOADED)) {
             return new AddRemoveInPlaylistCommandOutput(command,
                     AddRemoveInPlaylistCommandOutput.Result.NO_SOURCE);
         }
 
-        if (!currentUser.getCurrentAudioFile().isSong()) {
+        if (!sourceType.equals(SourceType.LIBRARY)) {
             return new AddRemoveInPlaylistCommandOutput(command,
                     AddRemoveInPlaylistCommandOutput.Result.SOURCE_NO_SONG);
         }
@@ -105,23 +187,26 @@ public class PlayerComponent implements PlayerCommandVisitor {
         }
 
         Playlist currentPlaylist = userPlaylists.get(playlistId);
-        SongInput currentSong = (SongInput) currentUser.getCurrentAudioFile();
+        SongInput currentSong = (SongInput) currentUserData.getNowPlaying();
 
         if (currentPlaylist.containsSong(currentSong)) {
             currentPlaylist.removeSong(currentSong);
+
             return new AddRemoveInPlaylistCommandOutput(command,
                     AddRemoveInPlaylistCommandOutput.Result.REMOVE);
         }
 
         currentPlaylist.addSong(currentSong);
+
         return new AddRemoveInPlaylistCommandOutput(command,
                 AddRemoveInPlaylistCommandOutput.Result.ADD);
     }
 
     @Override
     public CommandOutput visit(StatusCommandInput command) {
-        User currentUser = users.get(command.getUsername());
+        UserData currentUserData = users.get(command.getUsername());
 
-        return new StatusCommandOutput(command, currentUser.getMusicPlayerState(command.getTimestamp()));
+        return new StatusCommandOutput(command,
+                currentUserData.getPlayerState().getMusicPlayerState(command.getTimestamp()));
     }
 }

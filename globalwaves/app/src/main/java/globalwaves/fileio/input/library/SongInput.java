@@ -2,9 +2,10 @@ package globalwaves.fileio.input.library;
 
 import java.util.List;
 
+import globalwaves.entity.AudioCheckpoint;
 import globalwaves.entity.AudioFile;
 
-public final class SongInput implements AudioFile {
+public final class SongInput extends AudioCheckpoint implements AudioFile {
     private String name;
     private Integer duration;
     private String album;
@@ -14,10 +15,6 @@ public final class SongInput implements AudioFile {
     private Integer releaseYear;
     private String artist;
 
-    public SongInput() {
-    }
-
-    @Override
     public String getName() {
         return name;
     }
@@ -87,15 +84,5 @@ public final class SongInput implements AudioFile {
         return "SongInput [name=" + name + ", duration=" + duration + ", album=" + album + ", tags=" + tags
                 + ", lyrics="
                 + lyrics + ", genre=" + genre + ", releaseYear=" + releaseYear + ", artist=" + artist + "]";
-    }
-
-    @Override
-    public boolean isCollection() {
-        return false;
-    }
-
-    @Override
-    public boolean isSong() {
-        return true;
     }
 }

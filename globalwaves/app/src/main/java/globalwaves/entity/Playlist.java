@@ -1,12 +1,10 @@
 package globalwaves.entity;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import globalwaves.fileio.input.library.SongInput;
 
-public class Playlist extends AudioCollection {
+public class Playlist extends AudioCollection implements AudioFile {
     private String name;
     private String owner;
     private boolean restricted;
@@ -22,6 +20,10 @@ public class Playlist extends AudioCollection {
         this.restricted = restricted;
 
         songs = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
@@ -48,31 +50,19 @@ public class Playlist extends AudioCollection {
         return songs.contains(song);
     }
 
-    public void removeSong(SongInput song) {
-        songs.remove(song);
-    }
-
     public void addSong(SongInput song) {
         songs.add(song);
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public SongInput getSong(int index) {
+        return songs.get(index);
     }
 
-    @Override
+    public void removeSong(SongInput song) {
+        songs.remove(song);
+    }
+
     public int getSize() {
         return songs.size();
-    }
-
-    @Override
-    public List<AudioFile> getAudioFiles() {
-        return Collections.unmodifiableList(songs);
-    }
-
-    @Override
-    public boolean isSong() {
-        return false;
     }
 }

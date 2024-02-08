@@ -1,6 +1,5 @@
 package globalwaves.player.components;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,14 +10,14 @@ import globalwaves.fileio.input.command.playlist.ShowPlaylistsCommandInput;
 import globalwaves.fileio.input.command.playlist.SwitchVisibilityCommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.fileio.output.command.playlist.CreatePlaylistCommandOutput;
-import globalwaves.player.User;
+import globalwaves.player.user.UserData;
 import globalwaves.visitor.command.PlaylistCommandVisitor;
 
 public class PlaylistComponent implements PlaylistCommandVisitor {
-    private Map<String, User> users;
+    private Map<String, UserData> users;
     private List<Playlist> playlists;
 
-    public PlaylistComponent(Map<String, User> users, List<Playlist> playlists) {
+    public PlaylistComponent(Map<String, UserData> users, List<Playlist> playlists) {
         this.users = users;
         this.playlists = playlists;
     }
@@ -28,8 +27,8 @@ public class PlaylistComponent implements PlaylistCommandVisitor {
         String username = command.getUsername();
         String playlistName = command.getPlaylistName();
 
-        User currentUser = users.get(username);
-        ArrayList<Playlist> userPlaylists = currentUser.getPlaylists();
+        UserData currentUser = users.get(username);
+        List<Playlist> userPlaylists = currentUser.getPlaylists();
 
         for (Playlist playlist : userPlaylists) {
             if (playlist.getName().toLowerCase().equals(playlistName.toLowerCase())) {

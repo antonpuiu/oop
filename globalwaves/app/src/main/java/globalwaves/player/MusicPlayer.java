@@ -37,6 +37,7 @@ import globalwaves.player.components.PlayerComponent;
 import globalwaves.player.components.PlaylistComponent;
 import globalwaves.player.components.SearchBarComponent;
 import globalwaves.player.components.UsersComponent;
+import globalwaves.player.user.UserData;
 import globalwaves.visitor.command.CommandVisitor;
 
 public class MusicPlayer implements CommandVisitor {
@@ -55,11 +56,12 @@ public class MusicPlayer implements CommandVisitor {
     }
 
     public void loadLibrary(LibraryInput libraryInput) {
-        Map<String, User> users = new HashMap<>();
+        Map<String, UserData> users = new HashMap<>();
         List<Playlist> playlists = new ArrayList<>();
 
-        for (UserInput user : libraryInput.getUsers())
-            users.put(user.getUsername(), new User());
+        for (UserInput user : libraryInput.getUsers()) {
+            users.put(user.getUsername(), new UserData());
+        }
 
         searchBarComponent = new SearchBarComponent(libraryInput, users, playlists);
         playerComponent = new PlayerComponent(users);

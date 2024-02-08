@@ -1,37 +1,17 @@
 package globalwaves.entity;
 
-import java.util.List;
+public class AudioCollection {
+    protected int currentAudioFile;
 
-public abstract class AudioCollection implements AudioFile {
-    private AudioFile currentAudioFile;
+    public AudioCollection() {
+        currentAudioFile = 0;
+    }
 
-    public AudioFile getCurrentAudioFile() {
+    public int getCurrentAudioFile() {
         return currentAudioFile;
     }
 
-    public void setCurrentAudioFile(AudioFile currentAudioFile) {
+    public void setCurrentAudioFile(int currentAudioFile) {
         this.currentAudioFile = currentAudioFile;
     }
-
-    public void setCurrentAudioFile(int index) {
-        currentAudioFile = getAudioFiles().get(index);
-    }
-
-    @Override
-    public boolean isCollection() {
-        return true;
-    }
-
-    @Override
-    public int getDuration() {
-        if (currentAudioFile == null) {
-            return -1;
-        }
-
-        return currentAudioFile.getDuration();
-    }
-
-    public abstract int getSize();
-
-    public abstract List<AudioFile> getAudioFiles();
 }

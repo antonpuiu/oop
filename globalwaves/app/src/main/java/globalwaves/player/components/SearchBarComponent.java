@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import globalwaves.entity.AudioFile;
 import globalwaves.entity.Playlist;
 import globalwaves.fileio.input.command.searchbar.PlaylistSearchCommandInput;
 import globalwaves.fileio.input.command.searchbar.PodcastSearchCommandInput;
@@ -21,21 +22,24 @@ import globalwaves.fileio.input.library.SongInput;
 import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.fileio.output.command.searchbar.SearchCommandOutput;
 import globalwaves.fileio.output.command.searchbar.SelectCommandOutput;
-import globalwaves.player.User;
+import globalwaves.player.user.PlayerState;
+import globalwaves.player.user.SourceType;
+import globalwaves.player.user.UserData;
+import globalwaves.player.user.UserState;
 import globalwaves.visitor.command.SearchBarCommandVisitor;
 
 public class SearchBarComponent implements SearchBarCommandVisitor {
     private LibraryInput libraryInput;
-    private Map<String, User> users;
+    private Map<String, UserData> usersData;
     private List<Playlist> playlists;
 
-    public SearchBarComponent(LibraryInput libraryInput, Map<String, User> users, List<Playlist> playlists) {
+    public SearchBarComponent(LibraryInput libraryInput, Map<String, UserData> usersData, List<Playlist> playlists) {
         this.libraryInput = libraryInput;
-        this.users = users;
+        this.usersData = usersData;
         this.playlists = playlists;
     }
 
-    private void searchSong(SongSearchCommandInput command, User currentUser) {
+    private void searchSong(SongSearchCommandInput command, UserData currentUserData) {
         SongSearchCommandFilter songFilter = command.getSongFilter();
         List<SongInput> audioFiles = libraryInput.getSongs();
         ArrayList<Predicate<SongInput>> predicates = new ArrayList<>();
@@ -94,11 +98,11 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
             audioFilesStream = audioFilesStream.filter(predicate);
         }
 
-        audioFiles = audioFilesStream.toList();
-        currentUser.setSongSearchResult(audioFiles);
+        audioFiles = audioFilesStream.limit(5).toList();
+        currentUserData.setSearchResult(audioFiles, SourceType.LIBRARY);
     }
 
-    private void podcastSearch(PodcastSearchCommandInput command, User currentUser) {
+    private void podcastSearch(PodcastSearchCommandInput command, UserData currentUserData) {
         PodcastSearchCommandFilter podcastFilter = command.getPodcastFilter();
         List<PodcastInput> audioFiles = libraryInput.getPodcasts();
         ArrayList<Predicate<PodcastInput>> predicates = new ArrayList<>();
@@ -120,11 +124,11 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
             audioFilesStream = audioFilesStream.filter(predicate);
         }
 
-        audioFiles = audioFilesStream.toList();
-        currentUser.setPodcastSearchResult(audioFiles);
+        audioFiles = audioFilesStream.limit(5).toList();
+        currentUserData.setSearchResult(audioFiles, SourceType.PODCAST);
     }
 
-    private void playlistSearch(PlaylistSearchCommandInput command, User currentUser) {
+    private void playlistSearch(PlaylistSearchCommandInput command, UserData currentUserData) {
         PlaylistSearchCommandFilter playlistFilter = command.getPlaylistFilter();
         List<Playlist> audioFiles = playlists;
         ArrayList<Predicate<Playlist>> predicates = new ArrayList<>();
@@ -146,68 +150,89 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
             audioFilesStream = audioFilesStream.filter(predicate);
         }
 
-        audioFiles = audioFilesStream.toList();
-        currentUser.setPlaylistSearchResult(audioFiles);
+        audioFiles = audioFilesStream.limit(5).toList();
+        currentUserData.setSearchResult(audioFiles, SourceType.PLAYLIST);
     }
 
     @Override
     public CommandOutput visit(SongSearchCommandInput command) {
-        User currentUser;
-        ArrayList<String> searchResult;
+        UserData currentUserData;
+        List<? extends AudioFile> searchResult;
+        UserState userState;
 
-        currentUser = users.get(command.getUsername());
-        if (!currentUser.getState().equals(User.UserState.INITIAL)) {
-            currentUser.resetSearch();
+        currentUserData = usersData.get(command.getUsername());
+        userState = currentUserData.getState();
+
+        if (!userState.equals(UserState.INITIAL)) {
+            currentUserData.resetSearchResult();
         }
 
-        searchSong(command, currentUser);
-        searchResult = currentUser.getSearchResults();
+        searchSong(command, currentUserData);
+        searchResult = currentUserData.getSearchResult();
 
         return new SearchCommandOutput(command, SearchCommandOutput.Result.DEFAULT,
                 Integer.toString(searchResult.size()),
-                searchResult);
+                currentUserData.getSearchResult()
+                        .stream()
+                        .map(song -> (song.getName()))
+                        .toList());
     }
 
     @Override
     public CommandOutput visit(PodcastSearchCommandInput command) {
-        User currentUser;
-        ArrayList<String> searchResult;
+        UserData currentUserData;
+        List<? extends AudioFile> searchResult;
 
-        currentUser = users.get(command.getUsername());
-        if (!currentUser.getState().equals(User.UserState.INITIAL)) {
-            currentUser.resetSearch();
+        currentUserData = usersData.get(command.getUsername());
+        if (!currentUserData.getState().equals(UserState.INITIAL)) {
+            currentUserData.resetSearchResult();
         }
 
-        podcastSearch(command, currentUser);
-        searchResult = currentUser.getSearchResults();
+        podcastSearch(command, currentUserData);
+        searchResult = currentUserData.getSearchResult();
 
         return new SearchCommandOutput(command,
                 SearchCommandOutput.Result.DEFAULT,
                 Integer.toString(searchResult.size()),
-                searchResult);
+                currentUserData.getSearchResult()
+                        .stream()
+                        .map(song -> (song.getName()))
+                        .toList());
     }
 
     @Override
     public CommandOutput visit(PlaylistSearchCommandInput command) {
-        User currentUser;
-        ArrayList<String> searchResult;
+        UserData currentUserData;
+        List<? extends AudioFile> searchResult;
 
-        currentUser = users.get(command.getUsername());
-        if (!currentUser.getState().equals(User.UserState.INITIAL)) {
-            currentUser.resetSearch();
+        currentUserData = usersData.get(command.getUsername());
+        if (!currentUserData.getState().equals(UserState.INITIAL)) {
+            currentUserData.resetSearchResult();
         }
 
-        playlistSearch(command, currentUser);
-        searchResult = currentUser.getSearchResults();
+        playlistSearch(command, currentUserData);
+        searchResult = currentUserData.getSearchResult();
 
         return new SearchCommandOutput(command,
                 SearchCommandOutput.Result.DEFAULT,
                 Integer.toString(searchResult.size()),
-                searchResult);
+                currentUserData.getSearchResult()
+                        .stream()
+                        .map(song -> (song.getName()))
+                        .toList());
     }
 
     @Override
     public CommandOutput visit(SearchCommandInput command) {
+        UserData currentUserData = usersData.get(command.getUsername());
+        UserState currentUserState = currentUserData.getState();
+        PlayerState<?> currentPlayerState = currentUserData.getPlayerState();
+
+        if (currentUserState.equals(UserState.AUDIOFILE_LOADED)) {
+            currentPlayerState.pausePlayback(command.getTimestamp());
+            currentUserData.setState(UserState.INITIAL);
+        }
+
         switch (command.getType()) {
             case "song":
                 return visit(new SongSearchCommandInput(command));
@@ -222,16 +247,26 @@ public class SearchBarComponent implements SearchBarCommandVisitor {
 
     @Override
     public CommandOutput visit(SelectCommandInput command) {
-        User currentUser;
-        SelectCommandOutput.Result result;
+        UserData currentUserData = usersData.get(command.getUsername());
+        int resultIndex = command.getItemNumber() - 1;
 
-        currentUser = users.get(command.getUsername());
-        result = currentUser.selectSearchResult(command.getItemNumber() - 1);
+        PlayerState<?> playerState = currentUserData.getPlayerState();
+        UserState userState = currentUserData.getState();
 
-        if (!result.equals(SelectCommandOutput.Result.SUCCESS)) {
-            return new SelectCommandOutput(command, result, null);
+        if (!userState.equals(UserState.SEARCH_PERFORMED)) {
+            return new SelectCommandOutput(command, SelectCommandOutput.Result.NO_SEARCH, null);
         }
 
-        return new SelectCommandOutput(command, result, currentUser.getCurrentAudioFile().getName());
+        var searchResult = currentUserData.getSearchResult();
+
+        if (resultIndex >= searchResult.size()) {
+            return new SelectCommandOutput(command, SelectCommandOutput.Result.OUT_OF_BOUNDS, null);
+        }
+
+        playerState.setNowPlaying(searchResult.get(resultIndex));
+        currentUserData.setState(UserState.AUDIOFILE_SELECTED);
+
+        return new SelectCommandOutput(command, SelectCommandOutput.Result.SUCCESS,
+                searchResult.get(resultIndex).getName());
     }
 }

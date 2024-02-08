@@ -1,13 +1,11 @@
 package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import globalwaves.entity.AudioCollection;
 import globalwaves.entity.AudioFile;
 
-public final class PodcastInput extends AudioCollection {
+public final class PodcastInput extends AudioCollection implements AudioFile {
     private String name;
     private String owner;
     private ArrayList<EpisodeInput> episodes;
@@ -31,6 +29,10 @@ public final class PodcastInput extends AudioCollection {
         this.owner = owner;
     }
 
+    public EpisodeInput getCurrentEpisode() {
+        return episodes.get(currentAudioFile);
+    }
+
     public ArrayList<EpisodeInput> getEpisodes() {
         return episodes;
     }
@@ -39,26 +41,12 @@ public final class PodcastInput extends AudioCollection {
         this.episodes = episodes;
     }
 
-    @Override
-    public String toString() {
-        return "PodcastInput [name=" + name + ", owner=" + owner + ", episodes=" + episodes + "]";
-    }
-
-    @Override
     public int getSize() {
-        if (episodes == null)
-            return -1;
-
         return episodes.size();
     }
 
     @Override
-    public List<AudioFile> getAudioFiles() {
-        return Collections.unmodifiableList(episodes);
-    }
-
-    @Override
-    public boolean isSong() {
-        return false;
+    public String toString() {
+        return "PodcastInput [name=" + name + ", owner=" + owner + ", episodes=" + episodes + "]";
     }
 }
