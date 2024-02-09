@@ -1,7 +1,6 @@
 package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public final class LibraryInput {
     private ArrayList<SongInput> songs;

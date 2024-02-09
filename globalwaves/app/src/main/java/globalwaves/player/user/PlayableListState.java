@@ -2,9 +2,9 @@ package globalwaves.player.user;
 
 import java.util.List;
 
-import globalwaves.entity.AudioFile;
+import globalwaves.entity.AudioCheckpoint;
 
-public class PlayableListState<PlaybackType extends AudioFile> {
+public class PlayableListState<PlaybackType extends AudioCheckpoint> {
     private List<PlaybackType> searchResult;
     private PlayerState<PlaybackType> playerState;
 

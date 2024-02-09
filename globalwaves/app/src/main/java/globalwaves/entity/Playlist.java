@@ -1,14 +1,15 @@
 package globalwaves.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import globalwaves.fileio.input.library.SongInput;
 
-public class Playlist extends AudioCollection implements AudioFile {
+public class Playlist extends AudioCollection {
     private String name;
     private String owner;
     private boolean restricted;
-    private ArrayList<SongInput> songs;
+    private List<SongInput> songs;
 
     public Playlist(String name, String owner) {
         this(name, owner, false);
@@ -64,5 +65,16 @@ public class Playlist extends AudioCollection implements AudioFile {
 
     public int getSize() {
         return songs.size();
+    }
+
+    @Override
+    public List<AudioCheckpoint> getAudioFiles() {
+        List<AudioCheckpoint> audioFiles = new ArrayList<>();
+
+        for (var song : songs) {
+            audioFiles.add(song);
+        }
+
+        return audioFiles;
     }
 }

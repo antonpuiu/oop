@@ -100,7 +100,8 @@ public class UserData {
     }
 
     public AudioFile getNowPlaying() {
-        if (!state.equals(UserState.AUDIOFILE_SELECTED)) {
+        if (state.equals(UserState.INITIAL) ||
+                state.equals(UserState.SEARCH_PERFORMED)) {
             return null;
         }
 

@@ -36,7 +36,7 @@ public class PlaylistComponent implements PlaylistCommandVisitor {
             }
         }
 
-        Playlist newPlaylist = new Playlist(username, playlistName);
+        Playlist newPlaylist = new Playlist(playlistName, username);
 
         userPlaylists.add(newPlaylist);
         playlists.add(newPlaylist);

@@ -189,6 +189,10 @@ public class PlayerComponent implements PlayerCommandVisitor {
         Playlist currentPlaylist = userPlaylists.get(playlistId);
         SongInput currentSong = (SongInput) currentUserData.getNowPlaying();
 
+        if (currentSong == null) {
+            return new AddRemoveInPlaylistCommandOutput(command, AddRemoveInPlaylistCommandOutput.Result.NULL_SONG);
+        }
+
         if (currentPlaylist.containsSong(currentSong)) {
             currentPlaylist.removeSong(currentSong);
 

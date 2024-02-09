@@ -42,6 +42,13 @@ public class AddRemoveInPlaylistCommandOutput extends PlayerCommandOutput {
             public String getResult(String arg) {
                 return "Please load a source before adding to or removing from the playlist.";
             }
+        },
+
+        NULL_SONG {
+            @Override
+            public String getResult(String arg) {
+                return "Null song";
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 package globalwaves.entity;
 
-public class AudioCollection {
+import java.util.List;
+
+public abstract class AudioCollection extends AudioCheckpoint {
     protected int currentAudioFile;
 
     public AudioCollection() {
@@ -14,4 +16,16 @@ public class AudioCollection {
     public void setCurrentAudioFile(int currentAudioFile) {
         this.currentAudioFile = currentAudioFile;
     }
+
+    @Override
+    public int getCheckpoint() {
+        return getAudioFiles().get(currentAudioFile).getCheckpoint();
+    }
+
+    @Override
+    public void addCheckpoint(int qty) {
+        getAudioFiles().get(currentAudioFile).addCheckpoint(qty);
+    }
+
+    public abstract List<AudioCheckpoint> getAudioFiles();
 }

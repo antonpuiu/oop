@@ -1,10 +1,12 @@
 package globalwaves.player.user;
 
+import globalwaves.entity.AudioCheckpoint;
 import globalwaves.entity.AudioFile;
+import globalwaves.entity.Playlist;
 import globalwaves.fileio.input.library.PodcastInput;
 import globalwaves.player.MusicPlayerState;
 
-public class PlayerState<PlaybackType extends AudioFile> {
+public class PlayerState<PlaybackType extends AudioCheckpoint> {
     private int startTimestamp;
     private int remainedTime;
     private RepeatState repeatState;
@@ -98,6 +100,9 @@ public class PlayerState<PlaybackType extends AudioFile> {
 
         if (nowPlaying instanceof PodcastInput) {
             name = elapsed == 0 ? "" : ((PodcastInput) nowPlaying).getCurrentEpisode().getName();
+        } else if (nowPlaying instanceof Playlist) {
+            name = elapsed == 0 ? ""
+                    : ((Playlist) nowPlaying).getSong(((Playlist) nowPlaying).getCurrentAudioFile()).getName();
         } else {
             name = elapsed == 0 ? "" : nowPlaying.getName();
         }

@@ -3,9 +3,8 @@ package globalwaves.fileio.input.library;
 import java.util.List;
 
 import globalwaves.entity.AudioCheckpoint;
-import globalwaves.entity.AudioFile;
 
-public final class SongInput extends AudioCheckpoint implements AudioFile {
+public final class SongInput extends AudioCheckpoint {
     private String name;
     private Integer duration;
     private String album;

@@ -1,14 +1,15 @@
 package globalwaves.fileio.input.library;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import globalwaves.entity.AudioCheckpoint;
 import globalwaves.entity.AudioCollection;
-import globalwaves.entity.AudioFile;
 
-public final class PodcastInput extends AudioCollection implements AudioFile {
+public final class PodcastInput extends AudioCollection {
     private String name;
     private String owner;
-    private ArrayList<EpisodeInput> episodes;
+    private List<EpisodeInput> episodes;
 
     public PodcastInput() {
     }
@@ -33,7 +34,7 @@ public final class PodcastInput extends AudioCollection implements AudioFile {
         return episodes.get(currentAudioFile);
     }
 
-    public ArrayList<EpisodeInput> getEpisodes() {
+    public List<EpisodeInput> getEpisodes() {
         return episodes;
     }
 
@@ -43,6 +44,17 @@ public final class PodcastInput extends AudioCollection implements AudioFile {
 
     public int getSize() {
         return episodes.size();
+    }
+
+    @Override
+    public List<AudioCheckpoint> getAudioFiles() {
+        List<AudioCheckpoint> audioFiles = new ArrayList<>();
+
+        for (var episode : episodes) {
+            audioFiles.add(episode);
+        }
+
+        return audioFiles;
     }
 
     @Override
