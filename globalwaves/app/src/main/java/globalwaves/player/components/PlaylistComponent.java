@@ -1,24 +1,27 @@
 package globalwaves.player.components;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import globalwaves.entity.Playlist;
+import globalwaves.entity.PlaylistOutput;
 import globalwaves.fileio.input.command.playlist.CreatePlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.FollowPlaylistCommandInput;
 import globalwaves.fileio.input.command.playlist.ShowPlaylistsCommandInput;
 import globalwaves.fileio.input.command.playlist.SwitchVisibilityCommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.fileio.output.command.playlist.CreatePlaylistCommandOutput;
+import globalwaves.fileio.output.command.playlist.ShowPlaylistsCommandOutput;
 import globalwaves.player.user.UserData;
 import globalwaves.visitor.command.PlaylistCommandVisitor;
 
-public class PlaylistComponent implements PlaylistCommandVisitor {
-    private Map<String, UserData> users;
+public class PlaylistComponent extends DefaultComponent implements PlaylistCommandVisitor {
     private List<Playlist> playlists;
 
-    public PlaylistComponent(Map<String, UserData> users, List<Playlist> playlists) {
-        this.users = users;
+    public PlaylistComponent(Map<String, UserData> usersData, List<Playlist> playlists) {
+        super(usersData);
+
         this.playlists = playlists;
     }
 
@@ -27,7 +30,7 @@ public class PlaylistComponent implements PlaylistCommandVisitor {
         String username = command.getUsername();
         String playlistName = command.getPlaylistName();
 
-        UserData currentUser = users.get(username);
+        UserData currentUser = usersData.get(username);
         List<Playlist> userPlaylists = currentUser.getPlaylists();
 
         for (Playlist playlist : userPlaylists) {
@@ -56,6 +59,19 @@ public class PlaylistComponent implements PlaylistCommandVisitor {
 
     @Override
     public CommandOutput visit(ShowPlaylistsCommandInput command) {
-        return null;
+        UserData currentUserData = usersData.get(command.getUsername());
+        List<PlaylistOutput> result = new ArrayList<>();
+
+        for (Playlist playlist : currentUserData.getPlaylists()) {
+            result.add(new PlaylistOutput(playlist.getName(),
+                    playlist.getAudioFiles()
+                            .stream()
+                            .map(song -> (song.getName()))
+                            .toList(),
+                    playlist.isRestricted() ? "private" : "public",
+                    playlist.getFollowers()));
+        }
+
+        return new ShowPlaylistsCommandOutput(command, result);
     }
 }

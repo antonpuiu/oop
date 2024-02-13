@@ -32,7 +32,7 @@ public class SearchCommandInput extends CommandInput {
 
     @Override
     public String toString() {
-        return super.toString() + "SearchCommandInput [type=" + type + ", filters=" + filters + "]";
+        return super.toString() + " SearchCommandInput [type=" + type + ", filters=" + filters + "]";
     }
 
 }

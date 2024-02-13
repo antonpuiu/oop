@@ -22,6 +22,6 @@ public final class SelectCommandInput extends CommandInput {
 
     @Override
     public String toString() {
-        return super.toString() + "SelectCommandInput [itemNumber=" + itemNumber + "]";
+        return super.toString() + " SelectCommandInput [itemNumber=" + itemNumber + "]";
     }
 }

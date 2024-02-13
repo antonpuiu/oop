@@ -1,6 +1,8 @@
 package globalwaves.fileio.input.command.searchbar.filter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SearchCommandFilter {
     private String name;
@@ -78,8 +80,66 @@ public class SearchCommandFilter {
 
     @Override
     public String toString() {
-        return "SearchCommandFilter [name=" + name + ", owner=" + owner + ", album=" + album + ", tags=" + tags
-                + ", lyrics=" + lyrics + ", genre=" + genre + ", releaseYear=" + releaseYear + ", artist=" + artist
-                + "]";
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("[");
+
+        Map<String, String> tokens = new LinkedHashMap<>() {
+            {
+                put("name", name);
+                put("owner", owner);
+                put("album", album);
+            }
+        };
+
+        Map<String, String> latterTokens = new LinkedHashMap<>() {
+            {
+                put("lyrics", lyrics);
+                put("genre", genre);
+                put("releaseYear", releaseYear);
+                put("artist", artist);
+            }
+        };
+
+        boolean commaInserted = false;
+
+        for (var entry : tokens.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+
+            if (!commaInserted) {
+                builder.append(entry.getKey() + "=" + entry.getValue());
+                commaInserted = true;
+            } else {
+                builder.append(", " + entry.getKey() + "=" + entry.getValue());
+            }
+        }
+
+        if (tags != null && tags.size() != 0) {
+            if (!commaInserted) {
+                builder.append("tags=" + tags);
+                commaInserted = true;
+            } else {
+                builder.append(", tags=" + tags);
+            }
+        }
+
+        for (var entry : latterTokens.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+
+            if (!commaInserted) {
+                builder.append(entry.getKey() + "=" + entry.getValue());
+                commaInserted = true;
+            } else {
+                builder.append(", " + entry.getKey() + "=" + entry.getValue());
+            }
+        }
+
+        builder.append("]");
+
+        return builder.toString();
     }
 }

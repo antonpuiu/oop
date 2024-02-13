@@ -41,6 +41,8 @@ import globalwaves.player.user.UserData;
 import globalwaves.visitor.command.CommandVisitor;
 
 public class MusicPlayer implements CommandVisitor {
+    private Map<String, UserData> usersData;
+
     private SearchBarComponent searchBarComponent;
     private PlayerComponent playerComponent;
     private PlaylistComponent playlistComponent;
@@ -48,6 +50,8 @@ public class MusicPlayer implements CommandVisitor {
     private GeneralComponent generalComponent;
 
     public MusicPlayer() {
+        usersData = new HashMap<>();
+
         searchBarComponent = null;
         playerComponent = null;
         playlistComponent = null;
@@ -56,33 +60,34 @@ public class MusicPlayer implements CommandVisitor {
     }
 
     public void loadLibrary(LibraryInput libraryInput) {
-        Map<String, UserData> users = new HashMap<>();
         List<Playlist> playlists = new ArrayList<>();
 
+        usersData.clear();
+
         for (UserInput user : libraryInput.getUsers()) {
-            users.put(user.getUsername(), new UserData());
+            usersData.put(user.getUsername(), new UserData());
         }
 
-        searchBarComponent = new SearchBarComponent(libraryInput, users, playlists);
-        playerComponent = new PlayerComponent(users);
-        playlistComponent = new PlaylistComponent(users, playlists);
-        usersComponent = new UsersComponent();
-        generalComponent = new GeneralComponent();
+        searchBarComponent = new SearchBarComponent(usersData, libraryInput, playlists);
+        playerComponent = new PlayerComponent(usersData);
+        playlistComponent = new PlaylistComponent(usersData, playlists);
+        usersComponent = new UsersComponent(usersData);
+        generalComponent = new GeneralComponent(usersData);
     }
 
     @Override
     public CommandOutput visit(SongSearchCommandInput command) {
-        return searchBarComponent.visit(command);
+        return searchBarComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(PodcastSearchCommandInput command) {
-        return searchBarComponent.visit(command);
+        return searchBarComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(PlaylistSearchCommandInput command) {
-        return searchBarComponent.visit(command);
+        return searchBarComponent.run(command);
     }
 
     @Override
@@ -101,96 +106,96 @@ public class MusicPlayer implements CommandVisitor {
 
     @Override
     public CommandOutput visit(SelectCommandInput command) {
-        return searchBarComponent.visit(command);
+        return searchBarComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(LoadCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(PlayPauseCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(RepeatCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(ShuffleCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(ForwardCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(BackwardCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(LikeCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(NextCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(PrevCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(AddRemoveInPlaylistCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(StatusCommandInput command) {
-        return playerComponent.visit(command);
+        return playerComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(CreatePlaylistCommandInput command) {
-        return playlistComponent.visit(command);
+        return playlistComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(SwitchVisibilityCommandInput command) {
-        return playlistComponent.visit(command);
+        return playlistComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(FollowPlaylistCommandInput command) {
-        return playlistComponent.visit(command);
+        return playlistComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(ShowPlaylistsCommandInput command) {
-        return playlistComponent.visit(command);
+        return playlistComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(ShowPreferredSongsCommandInput command) {
-        return usersComponent.visit(command);
+        return usersComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(GetTop5SongsCommandInput command) {
-        return generalComponent.visit(command);
+        return generalComponent.run(command);
     }
 
     @Override
     public CommandOutput visit(GetTop5PlaylistsCommandInput command) {
-        return generalComponent.visit(command);
+        return generalComponent.run(command);
     }
 }

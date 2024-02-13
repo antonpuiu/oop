@@ -1,15 +1,18 @@
 package globalwaves.entity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import globalwaves.fileio.input.library.SongInput;
+import globalwaves.player.user.UserData;
 
 public class Playlist extends AudioCollection {
     private String name;
     private String owner;
     private boolean restricted;
     private List<SongInput> songs;
+    private List<UserData> followers;
 
     public Playlist(String name, String owner) {
         this(name, owner, false);
@@ -20,7 +23,8 @@ public class Playlist extends AudioCollection {
         this.owner = owner;
         this.restricted = restricted;
 
-        songs = new ArrayList<>();
+        songs = new LinkedList<>();
+        followers = new LinkedList<>();
     }
 
     public String getName() {
@@ -65,6 +69,18 @@ public class Playlist extends AudioCollection {
 
     public int getSize() {
         return songs.size();
+    }
+
+    public void follow(UserData userData) {
+        followers.add(userData);
+    }
+
+    public void unfollow(UserData userData) {
+        followers.remove(userData);
+    }
+
+    public int getFollowers() {
+        return followers.size();
     }
 
     @Override

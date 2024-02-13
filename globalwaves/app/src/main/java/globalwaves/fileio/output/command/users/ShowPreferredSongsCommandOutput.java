@@ -1,20 +1,20 @@
 package globalwaves.fileio.output.command.users;
 
+import java.util.List;
+
 import globalwaves.fileio.input.command.CommandInput;
 import globalwaves.fileio.output.command.CommandOutput;
-import globalwaves.fileio.output.command.CommandResult;
 
 public class ShowPreferredSongsCommandOutput extends CommandOutput {
-    public ShowPreferredSongsCommandOutput(CommandInput inputCommand) {
+    public List<String> result;
+
+    public ShowPreferredSongsCommandOutput(CommandInput inputCommand, List<String> result) {
         super(inputCommand);
+
+        this.result = result;
     }
 
-    public enum Result implements CommandResult {
-        DEFAULT {
-            @Override
-            public String getResult(String arg) {
-                return null;
-            }
-        }
+    public List<String> getResult() {
+        return result;
     }
 }

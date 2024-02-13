@@ -53,7 +53,7 @@ public final class Main {
 
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.getName().startsWith("library")
-                    || !file.getName().contains("test05")) {
+                    || !file.getName().contains("test07")) {
                 continue;
             }
 

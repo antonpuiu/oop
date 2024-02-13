@@ -1,12 +1,11 @@
 package globalwaves.fileio.output.command.player;
 
 import globalwaves.fileio.input.command.CommandInput;
-import globalwaves.fileio.output.command.CommandOutput;
 import globalwaves.fileio.output.command.CommandResult;
 
-public class RepeatCommandOutput extends CommandOutput {
-    public RepeatCommandOutput(CommandInput inputCommand) {
-        super(inputCommand);
+public class RepeatCommandOutput extends PlayerCommandOutput {
+    public RepeatCommandOutput(CommandInput inputCommand, Result result, String arg) {
+        super(inputCommand, result.getResult(arg));
     }
 
     public enum Result implements CommandResult {

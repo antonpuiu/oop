@@ -1,29 +1,86 @@
 package globalwaves.entity;
 
 public abstract class AudioCheckpoint implements AudioFile {
-    private int checkpoint;
+    protected int startTimestamp;
+    protected int remainedTime;
+    protected boolean paused;
 
     public AudioCheckpoint() {
-        checkpoint = 0;
+        startTimestamp = 0;
+        remainedTime = 0;
+
+        paused = true;
     }
 
-    public int getCheckpoint() {
-        return checkpoint;
+    public boolean getPaused() {
+        return paused;
     }
 
-    public void addCheckpoint(int qty) {
-        checkpoint += qty;
+    public void update(int timestamp) {
+        int elapsed = 0;
+
+        if (paused) {
+            elapsed = remainedTime;
+        } else {
+            elapsed = remainedTime - (timestamp - startTimestamp);
+        }
+
+        if (elapsed <= 0) {
+            remainedTime = 0;
+            paused = true;
+        }
     }
 
-    public void subCheckpoint(int qty) {
-        checkpoint -= qty;
+    public void startPlayback(int timestamp) {
+        if (!paused) {
+            return;
+        }
+
+        if (remainedTime == 0) {
+            remainedTime = getDuration();
+        }
+
+        startTimestamp = timestamp;
+        paused = false;
+
+        System.out.println("Started playback at " + startTimestamp + "\tRemained Time: " + remainedTime);
     }
 
-    public void setCheckpoint(int checkpoint) {
-        this.checkpoint = checkpoint;
+    public void pausePlayback(int timestamp) {
+        if (paused) {
+            return;
+        }
+
+        remainedTime -= (timestamp - startTimestamp);
+        startTimestamp = 0;
+        paused = true;
+
+        System.out.println("Paused playback at " + timestamp + "\tRemainedTime: " + remainedTime);
     }
 
-    public void resetCheckpoint() {
-        checkpoint = 0;
+    public void resetPlayback(int timestamp) {
+        startTimestamp = timestamp;
+        remainedTime = getDuration();
+        paused = false;
     }
+
+    public void stopPlayback() {
+        startTimestamp = 0;
+        remainedTime = getDuration();
+        paused = true;
+    }
+
+    public int getElapsed(int timestamp) {
+        int elapsed = 0;
+
+        if (paused) {
+            elapsed = remainedTime;
+        } else {
+            elapsed = remainedTime - (timestamp - startTimestamp);
+        }
+
+        return elapsed;
+    }
+
+    public abstract int getDuration();
 }

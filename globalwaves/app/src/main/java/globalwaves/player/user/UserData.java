@@ -1,8 +1,10 @@
 package globalwaves.player.user;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import globalwaves.entity.AudioCheckpoint;
 import globalwaves.entity.AudioFile;
 import globalwaves.entity.Playlist;
 import globalwaves.fileio.input.library.PodcastInput;
@@ -10,6 +12,7 @@ import globalwaves.fileio.input.library.SongInput;
 
 public class UserData {
     private List<Playlist> playlists;
+    private List<SongInput> likedSongs;
     private SourceType sourceType;
     private UserState state;
 
@@ -18,13 +21,19 @@ public class UserData {
     private PlayableListState<Playlist> playlistInput;
 
     public UserData() {
+        likedSongs = new LinkedList<>();
         playlists = new ArrayList<>();
+
         sourceType = SourceType.UNKNOWN;
         state = UserState.INITIAL;
 
         libraryInput = null;
         podcastInput = null;
         playlistInput = null;
+    }
+
+    public List<SongInput> getLikedSongs() {
+        return likedSongs;
     }
 
     public List<Playlist> getPlaylists() {
@@ -99,7 +108,7 @@ public class UserData {
         playlistInput = null;
     }
 
-    public AudioFile getNowPlaying() {
+    public AudioCheckpoint getNowPlaying() {
         if (state.equals(UserState.INITIAL) ||
                 state.equals(UserState.SEARCH_PERFORMED)) {
             return null;

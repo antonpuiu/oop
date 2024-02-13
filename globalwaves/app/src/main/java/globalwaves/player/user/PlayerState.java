@@ -7,47 +7,20 @@ import globalwaves.fileio.input.library.PodcastInput;
 import globalwaves.player.MusicPlayerState;
 
 public class PlayerState<PlaybackType extends AudioCheckpoint> {
-    private int startTimestamp;
-    private int remainedTime;
     private RepeatState repeatState;
     private boolean shuffle;
-    private boolean paused;
     private PlaybackType nowPlaying;
 
     public PlayerState() {
-        startTimestamp = 0;
-        remainedTime = 0;
-
         repeatState = RepeatState.NO_REPEAT;
 
         shuffle = false;
-        paused = false;
 
         nowPlaying = null;
     }
 
-    public int getStartTimestamp() {
-        return startTimestamp;
-    }
-
-    public void setStartTimestamp(int startTimestamp) {
-        this.startTimestamp = startTimestamp;
-    }
-
-    public int getRemainedTime() {
-        return remainedTime;
-    }
-
-    public void setRemainedTime(int remainedTime) {
-        this.remainedTime = remainedTime;
-    }
-
     public String getRepeat() {
         return repeatState.getValue();
-    }
-
-    public void setRepeat(RepeatState repeatState) {
-        this.repeatState = repeatState;
     }
 
     public boolean isShuffle() {
@@ -56,14 +29,6 @@ public class PlayerState<PlaybackType extends AudioCheckpoint> {
 
     public void setShuffle(boolean shuffle) {
         this.shuffle = shuffle;
-    }
-
-    public boolean isPaused() {
-        return paused;
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
     }
 
     public PlaybackType getNowPlaying() {
@@ -87,16 +52,16 @@ public class PlayerState<PlaybackType extends AudioCheckpoint> {
         int elapsed;
         String name;
 
-        if (paused) {
-            elapsed = remainedTime;
-        } else {
-            elapsed = remainedTime - (timestamp - startTimestamp);
+        if (nowPlaying == null) {
+            return new MusicPlayerState(
+                    "",
+                    0,
+                    RepeatState.NO_REPEAT.getValue(),
+                    false,
+                    true);
         }
 
-        if (elapsed < 0) {
-            elapsed = 0;
-            paused = true;
-        }
+        elapsed = nowPlaying.getElapsed(timestamp);
 
         if (nowPlaying instanceof PodcastInput) {
             name = elapsed == 0 ? "" : ((PodcastInput) nowPlaying).getCurrentEpisode().getName();
@@ -112,27 +77,24 @@ public class PlayerState<PlaybackType extends AudioCheckpoint> {
                 elapsed,
                 repeatState.getValue(),
                 shuffle,
-                paused);
+                nowPlaying.getPaused());
     }
 
     public void pausePlayback(int timestamp) {
-        paused = true;
-        remainedTime -= (timestamp - startTimestamp);
-        startTimestamp = 0;
+        nowPlaying.pausePlayback(timestamp);
     }
 
     public void startPlayback(int timestamp) {
-        paused = false;
-        startTimestamp = timestamp;
+        nowPlaying.startPlayback(timestamp);
     }
 
     public boolean playPause(int timestamp) {
-        if (paused) {
-            startPlayback(timestamp);
+        if (nowPlaying.getPaused()) {
+            nowPlaying.startPlayback(timestamp);
         } else {
-            pausePlayback(timestamp);
+            nowPlaying.pausePlayback(timestamp);
         }
 
-        return paused;
+        return nowPlaying.getPaused();
     }
 }
